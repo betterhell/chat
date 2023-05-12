@@ -1,0 +1,7 @@
+@import "./style/variables";
+
+body {
+  display: grid;
+  background-color: $main-green;
+  font-family: Arial, Helvetica, sans-serif;
+}
