@@ -4,42 +4,41 @@ import {useUserStore} from "../../store/user.store";
 import Spinner from "../../UI/Spinner/Spinner";
 
 const SignIn = () => {
-    const [userId, setUserId] = useState("")
-    const [userToken, setUserToken] = useState("")
+    const [id, setId] = useState("")
+    const [token, setToken] = useState("")
 
-    const setUserIdStore = useUserStore(state => state.setUserId)
-    const setUserTokenStore = useUserStore(state => state.setUserToken)
+    const setUserId = useUserStore(state => state.setUserId)
+    const setUserToken = useUserStore(state => state.setUserToken)
     const userStatus = useUserStore(state => state.userStatus)
     const isLoading = useUserStore(state => state.isLoading)
     const checkUser = useUserStore(state => state.checkUser)
 
-    const handleUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserId(e.target.value)
+    const setUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setId(e.target.value)
     }
 
-    const handleUserTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserToken(e.target.value)
+    const setUserTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setToken(e.target.value)
     }
 
-
-    const handleNewUserId = (e: React.FormEvent<HTMLFormElement>) => {
+    const setNewUser = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setUserIdStore(userId)
-        setUserTokenStore(userToken)
-        setUserId("")
-        setUserToken("")
+        setUserId(id)
+        setUserToken(token)
+        setId("")
+        setToken("")
         checkUser()
     }
 
     return (
         <div className={styles.sign_in}>
-            <form onSubmit={handleNewUserId}>
+            <form onSubmit={setNewUser}>
                 <h1>Войти</h1>
                 <div className={styles.sign_in__id}>
                     <label htmlFor="id">
                         idInstance
                     </label>
-                    <input value={userId} onChange={handleUserIdChange}
+                    <input value={id} onChange={setUserIdChange}
                            required={true}
                            placeholder="Введите id"
                            name="id"
@@ -50,17 +49,24 @@ const SignIn = () => {
                     <label htmlFor="token">
                         apiTokenInstance
                     </label>
-                    <input value={userToken} onChange={handleUserTokenChange}
+                    <input value={token} onChange={setUserTokenChange}
                            required={true}
                            placeholder="Введите токен"
                            name="token"
                            type="text"/>
                 </div>
                 {userStatus !== 200 &&
-                    <p style={{color: "red"}}>Пользователь на авторизован.
-                        Для авторизации аккаунта обратитесь к разделу
-                        <a target="_blank" href="https://green-api.com/docs/before-start/#qr">Перед началом работы</a>
-                    </p>
+                    <div className={styles.sign_in__warning}>
+                        <p className={styles.sign_in__warning__notAuth} style={{color: "red"}}>Пользователь на
+                            авторизован.
+                        </p>
+                        <p className={styles.sign_in__warning__forAuth}> Для авторизации аккаунта обратитесь к
+                            разделу <br/>
+                            <a target="_blank" href="https://green-api.com/docs/before-start/#qr"> Перед началом
+                                работы
+                            </a>
+                        </p>
+                    </div>
                 }
                 {isLoading ? <Spinner/> : <button>Войти</button>}
             </form>
