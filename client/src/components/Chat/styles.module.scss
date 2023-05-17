@@ -1,0 +1,104 @@
+@import "../../styles/variables";
+
+.chat {
+  margin: 0 auto;
+  background-color: white;
+  display: flex;
+  max-width: 1600px;
+  width: 100%;
+  height: calc(100vh - 36px);
+  box-shadow: 0 6px 18px $shadow-rgb;
+
+
+  &__controls {
+    width: 30%;
+    background-color: $main-white;
+
+    &__profile {
+      max-height: 59px;
+      box-sizing: border-box;
+      padding: 10px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $chat-main-background;
+
+      svg {
+        max-width: 40px;
+        height: 40px;
+      }
+
+      button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        max-width: 40px;
+        height: 40px;
+      }
+
+      &_actions {
+        display: flex;
+        gap: 17px;
+      }
+    }
+
+    &__searchInput {
+      height: 49px;
+      padding: 0 0 0 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid $border-strong;
+
+      button {
+        cursor: pointer;
+        border: none;
+        background: transparent;
+
+        svg {
+          margin: 0 8px;
+        }
+      }
+    }
+  }
+}
+
+.chat__textfield {
+  border-left: 1px solid $border-strong;
+  border-bottom: 6px solid $intro-border;
+  width: 70%;
+  background-color: $chat-main-background;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__emptyChat {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    user-select: none;
+
+    &_info {
+      margin-top: 20px;
+      text-align: center;
+
+      h1 {
+        font-size: 32px;
+        font-weight: 300;
+        line-height: 37.5px;
+        color: $primary-title;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $primary-text;
+      }
+    }
+
+  }
+}

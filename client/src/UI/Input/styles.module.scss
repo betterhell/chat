@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+input {
+  padding: 5px 5px;
+  height: 35px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 100%;
+  border: 3px solid $main-grey;
+  background-color: $input-background;
+
+  &:focus {
+    outline: none;
+  }
+}
