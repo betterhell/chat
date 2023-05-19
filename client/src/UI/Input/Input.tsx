@@ -4,7 +4,7 @@ import styles from "./styles.module.scss"
 interface InputProps {
     placeholder: string
     type: "text" | "password" | "number"
-    value: string
+    value?: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
