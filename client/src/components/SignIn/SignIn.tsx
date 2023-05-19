@@ -4,11 +4,15 @@ import {useUserStore} from "../../store/user.store";
 import Spinner from "../../UI/Spinner/Spinner";
 import {useNavigate} from "react-router-dom";
 
-const SignIn = () => {
+interface SignInProps {
+    socket: any
+}
+
+const SignIn: React.FC<SignInProps> = ({socket}) => {
     const navigate = useNavigate()
 
-    const [username, setUsername] = useState("")
-    const [room, setRoom] = useState("")
+    const [username, setUsername] = useState<string>("")
+    const [room, setRoom] = useState<string>("")
 
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,14 +23,16 @@ const SignIn = () => {
         setRoom(e.target.value)
     }
 
-    const setNewUser = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        localStorage.setItem("username", username)
+        localStorage.setItem("room", room)
         navigate(`/chat?username=${username}&room=${room}`)
     }
 
     return (
         <div className={styles.sign_in}>
-            <form onSubmit={setNewUser}>
+            <form onSubmit={handleSubmit}>
                 <h1>Войти</h1>
                 <div className={styles.sign_in__id}>
                     <label htmlFor="nickname">

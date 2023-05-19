@@ -1,43 +1,35 @@
-import express from "express"
-import http from "http"
-import {Server} from "socket.io";
-import cors from "cors"
+import {Request, Response} from "express";
 
-import route from "./route"
-
+const PORT = 5000
+const cors = require("cors")
+const express = require("express")
 const app = express()
+const httpServer = require("http").Server(app)
 
-app.use(cors({origin: "*"}))
-app.use(route)
+app.use(cors());
 
-const server = http.createServer(app);
-
-const io = new Server(server, {
+const io = require("socket.io")(httpServer, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
 })
 
-io.on("connection", (socket) => {
-    socket.on('join', ({username, room}) => {
-        socket.join(room)
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello API!')
+})
 
-        socket.emit('message', {
-            data: {
-                user: {
-                    name: "Admin",
-                    message: `Hey kekw ${username}`
-                }
-            }
-        })
+//socket.io connection
+io.on("connection", (client: any) => {
+    console.log(`User with id ${client.id} is connected!`)
+    client.on("disconnect", () => {
+        console.log(`User with id ${client.id} is disconnected!`)
     })
-
-    io.on('disconnect', () => {
-        console.log('Disconnected')
+    client.on("message", (data) => {
+        io.emit("response", data)
     })
 })
 
-server.listen(5000, () => {
-    console.log('Server is running!')
+httpServer.listen(PORT, () => {
+    console.log('Server is up!')
 })
