@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styles from "./styles.module.scss"
 import {useUserStore} from "../../store/user.store";
 import Spinner from "../../UI/Spinner/Spinner";
+import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from "react-router-dom";
 
 interface SignInProps {
@@ -12,22 +13,21 @@ const SignIn: React.FC<SignInProps> = ({socket}) => {
     const navigate = useNavigate()
 
     const [username, setUsername] = useState<string>("")
-    const [room, setRoom] = useState<string>("")
 
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value)
     }
 
-    const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRoom(e.target.value)
-    }
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         localStorage.setItem("username", username)
-        localStorage.setItem("room", room)
-        navigate(`/chat?username=${username}&room=${room}`)
+
+        socket.emit('newUser', {
+            username,
+            id: uuidv4(),
+        })
+        navigate(`/chat`)
     }
 
     return (
@@ -47,18 +47,18 @@ const SignIn: React.FC<SignInProps> = ({socket}) => {
                            type="text"/>
                 </div>
 
-                <div className={styles.sign_in__token}>
-                    <label htmlFor="room">
-                        Room
-                    </label>
-                    <input value={room}
-                           onChange={handleRoomChange}
-                           required={true}
-                           autoComplete="off"
-                           placeholder="You'r fking room"
-                           name="room"
-                           type="text"/>
-                </div>
+                {/*<div className={styles.sign_in__token}>*/}
+                {/*    <label htmlFor="room">*/}
+                {/*        Room*/}
+                {/*    </label>*/}
+                {/*    <input value={room}*/}
+                {/*           onChange={handleRoomChange}*/}
+                {/*           required={true}*/}
+                {/*           autoComplete="off"*/}
+                {/*           placeholder="You'r fking room"*/}
+                {/*           name="room"*/}
+                {/*           type="text"/>*/}
+                {/*</div>*/}
                 {/*{!checker &&*/}
                 {/*    <div className={styles.sign_in__warning}>*/}
                 {/*        <p className={styles.sign_in__warning__notAuth} style={{color: "red"}}>Пользователь на*/}

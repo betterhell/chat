@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styles from "./styles.module.scss"
 
 import ProfileIcon from "../../assets/icons/ProfileIcon";
@@ -14,6 +14,7 @@ import FilterIcon from "../../assets/icons/FilterIcon";
 import {useUserStore} from "../../store/user.store";
 import {useLocation, useNavigate} from "react-router-dom";
 import {v4 as uuidv4} from 'uuid';
+import {UserModel} from "../../models/user.model";
 
 interface chatProps {
     socket: any
@@ -28,23 +29,47 @@ interface Message {
     timestamp: string,
 }
 
-const Chat: React.FC<chatProps> = ({socket, children}) => {
+const Chat: React.FC<chatProps> = ({socket}) => {
     const navigate = useNavigate()
 
     const [message, setMessage] = useState<string>("")
     const [messages, setMessages] = useState<Message[]>([])
 
+    const [users, setUsers] = useState<UserModel[]>([])
+
+    useEffect(() => {
+        socket.on('connectNewUser', (data: any) => setUsers(data))
+    }, [users, socket])
+
+    useEffect(() => {
+        socket.on('disconnected', (data: any) => {
+            setUsers(data)
+            console.log(data)
+        })
+    }, [users, socket])
+
     useEffect(() => {
         socket.on("response", (data: Message) => {
             setMessages([...messages, data])
         })
-
-    }, [messages])
-
+    }, [messages, socket])
 
     const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
+
+    const messageRef = useRef<null | HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (messageRef.current) {
+            messageRef.current.scrollIntoView(
+                {
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                })
+        }
+    })
 
     const handleSendMessage = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -64,7 +89,7 @@ const Chat: React.FC<chatProps> = ({socket, children}) => {
 
     const handleLeave = () => {
         localStorage.removeItem("username")
-        localStorage.removeItem("room")
+        socket.emit('disconnectUser', users.find((user) => user.id))
         navigate("/")
     }
 
@@ -90,26 +115,28 @@ const Chat: React.FC<chatProps> = ({socket, children}) => {
 
                 <div className={styles.chat__controls__contacts}>
                     <ul>
-                        <li>User 1</li>
-                        <li>User 23</li>
-                        <li>User 235</li>
+                        {users.map((user, index) => {
+                            return <li key={uuidv4()}>{user.username}</li>
+                        })}
                     </ul>
                 </div>
             </div>
 
             <div className={styles.chat__textfield}>
                 <div className={styles.chat__textfield__log}>
-                    <button onClick={handleLeave}>Leave chat</button>
+                    <button className={styles.chat__textfield__leaveButton} onClick={handleLeave}>Leave chat</button>
                     {messages.map((message: Message) => {
                         return message.username === localStorage.getItem("username")
                             ? (
-                                <div key={message.id} className={styles.chat__textfield__log_youMessage}>
+                                <div ref={messageRef} key={message.id}
+                                     className={styles.chat__textfield__log_youMessage}>
                                     <p>{message.message}</p>
                                     <p className={styles.chat__textfield__log_message_time}>{message.timestamp}</p>
                                 </div>
                             )
                             : (
-                                <div key={message.socketId} className={styles.chat__textfield__log_message}>
+                                <div ref={messageRef} key={message.socketId}
+                                     className={styles.chat__textfield__log_message}>
                                     <h4>{message.username}</h4>
                                     <p>{message.message}</p>
                                     <p className={styles.chat__textfield__log_message_time}>{message.timestamp}</p>
@@ -118,7 +145,8 @@ const Chat: React.FC<chatProps> = ({socket, children}) => {
                     })}
                 </div>
                 <form onSubmit={handleSendMessage} className={styles.chat__textfield__controls}>
-                    <Input value={message} placeholder="Написать..." type="text" onChange={handleMessage}></Input>
+                    <Input value={message} placeholder="Написать..." type="text"
+                           onChange={handleMessage}></Input>
                     <button type="submit">Send</button>
                 </form>
             </div>

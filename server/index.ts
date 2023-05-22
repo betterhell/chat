@@ -1,4 +1,5 @@
 import {Request, Response} from "express";
+import {users} from "./data";
 
 const PORT = 5000
 const cors = require("cors")
@@ -27,6 +28,16 @@ io.on("connection", (client: any) => {
     })
     client.on("message", (data) => {
         io.emit("response", data)
+    })
+    client.on("newUser", (data) => {
+        users.push(data)
+
+        io.emit('connectNewUser', users)
+    })
+    client.on('disconnectUser', (data) => {
+        // @ts-ignore
+        users = users.filter((user) => user.id !== data.id)
+        io.emit("disconnected", users)
     })
 })
 
