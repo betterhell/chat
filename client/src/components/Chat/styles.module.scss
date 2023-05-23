@@ -111,6 +111,7 @@
 
 
   &__log {
+    position: relative;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -186,17 +187,28 @@
 
     button {
       border: 1px solid $main-green;
-      width: 60px;
-      height: 42px;
+      padding: 10px 20px;
+      margin-top: 8px;
       background-color: $main-green;
       color: $main-white;
       cursor: pointer;
       border-radius: 8px;
+      box-sizing: border-box;
 
       &:hover {
         background-color: $main-grey;
         color: $primary-title
       }
+    }
+
+    &__emojiButton {
+      margin-right: 8px;
+    }
+
+    &__emojiPicker {
+      position: absolute;
+      bottom: 70px;
+      right: 20px;
     }
   }
 }

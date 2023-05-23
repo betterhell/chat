@@ -15,6 +15,7 @@ import {v4 as uuidv4} from 'uuid';
 import {UserModel} from "../../models/user.model";
 import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import {TbLogout} from "react-icons/tb"
+import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 
 interface chatProps {
     socket: any
@@ -34,6 +35,9 @@ const Chat: React.FC<chatProps> = ({socket}) => {
 
     const [message, setMessage] = useState<string>("")
     const [status, setStatus] = useState<string>("")
+
+    const [emojiPicker, setEmojiPicker] = useState<boolean>(false)
+    const [currentEmoji, setCurrentEmoji] = useState<React.ReactNode | null>(null)
 
     const [messages, setMessages] = useState<Message[]>([])
     const [users, setUsers] = useState<UserModel[]>([])
@@ -113,6 +117,16 @@ const Chat: React.FC<chatProps> = ({socket}) => {
         socket.on("responseEndTyping", (data: any) => setStatus(data))
     }, [socket])
 
+    const toggleEmojiPicker = () => {
+        setEmojiPicker(!emojiPicker)
+    }
+
+    const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
+        setCurrentEmoji(emojiData.emoji)
+        setMessage(emojiData.emoji)
+        setEmojiPicker(false)
+    };
+
     return (
         <div className={styles.chat}>
             <div className={styles.chat__controls}>
@@ -175,8 +189,16 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                            placeholder="Написать..."
                            type="text"
                            onChange={handleMessage}></Input>
+                    <button className={styles.chat__textfield__controls__emojiButton}
+                            onClick={toggleEmojiPicker}>{currentEmoji ? currentEmoji : "Emoji"}
+                    </button>
                     <button type="submit">Send</button>
                 </form>
+                {emojiPicker &&
+                    <div className={styles.chat__textfield__controls__emojiPicker}><EmojiPicker
+                        onEmojiClick={onEmojiClick}
+                        width={300}/>
+                    </div>}
             </div>
         </div>
     );
