@@ -14,7 +14,6 @@ const SignIn: React.FC<SignInProps> = ({socket}) => {
 
     const [username, setUsername] = useState<string>("")
 
-
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value)
     }

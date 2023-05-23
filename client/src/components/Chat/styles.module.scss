@@ -78,6 +78,7 @@
 }
 
 .chat__textfield {
+  position: relative;
   border-left: 1px solid $border-strong;
   border-bottom: 6px solid $intro-border;
   width: 70%;
@@ -85,6 +86,22 @@
   background-color: $chat-main-background;
   display: flex;
   flex-direction: column;
+
+  &__typingStatus {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    background-color: transparent;
+
+    p {
+      font-size: 13px;
+    }
+
+    svg {
+      width: 30px;
+      height: 9px;
+    }
+  }
 
   p {
     justify-items: flex-end;
@@ -161,7 +178,7 @@
     input {
       border: 1px solid $main-green;
       background-color: $main-white;
-      margin: 20px;
+      margin: 30px 20px 20px 20px;
       justify-self: flex-end;
       padding: 20px;
       align-self: end;
