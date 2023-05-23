@@ -6,15 +6,15 @@ import SpeakerIcon from "../../assets/icons/SpeakerIcon";
 import StatusIcon from "../../assets/icons/StatusIcon";
 import NewChatIcon from "../../assets/icons/NewChatIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";
-import io from "socket.io-client";
-import ChatImage from "../../assets/images/ChatImage";
+
 import Input from "../../UI/Input/Input";
 import FilterIcon from "../../assets/icons/FilterIcon";
 
-import {useUserStore} from "../../store/user.store";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {v4 as uuidv4} from 'uuid';
 import {UserModel} from "../../models/user.model";
+import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
+import {TbLogout} from "react-icons/tb"
 
 interface chatProps {
     socket: any
@@ -33,18 +33,19 @@ const Chat: React.FC<chatProps> = ({socket}) => {
     const navigate = useNavigate()
 
     const [message, setMessage] = useState<string>("")
-    const [messages, setMessages] = useState<Message[]>([])
+    const [status, setStatus] = useState<string>("")
 
+    const [messages, setMessages] = useState<Message[]>([])
     const [users, setUsers] = useState<UserModel[]>([])
 
     useEffect(() => {
         socket.on('connectNewUser', (data: any) => setUsers(data))
+        localStorage.setItem("users", JSON.stringify(users))
     }, [users, socket])
 
     useEffect(() => {
         socket.on('disconnected', (data: any) => {
             setUsers(data)
-            console.log(data)
         })
     }, [users, socket])
 
@@ -74,7 +75,6 @@ const Chat: React.FC<chatProps> = ({socket}) => {
     const handleSendMessage = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-
         if (message.trim() && localStorage.getItem("username")) {
             socket.emit("message", {
                 id: uuidv4(),
@@ -93,6 +93,26 @@ const Chat: React.FC<chatProps> = ({socket}) => {
         navigate("/")
     }
 
+    const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.code === "Backspace" || e.code === "Space") {
+            return
+        }
+        socket.emit('startTyping', `${localStorage.getItem("username")} is typing`)
+    }
+    const handleEndTyping = () => {
+        setTimeout(() => {
+            socket.emit('endTyping', "")
+        }, 1000)
+    }
+
+    useEffect(() => {
+        socket.on("responseStartTyping", (data: any) => setStatus(data))
+    }, [socket])
+
+    useEffect(() => {
+        socket.on("responseEndTyping", (data: any) => setStatus(data))
+    }, [socket])
+
     return (
         <div className={styles.chat}>
             <div className={styles.chat__controls}>
@@ -105,26 +125,32 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                         <button><StatusIcon/></button>
                         <button><NewChatIcon/></button>
                         <button><SettingsIcon/></button>
+                        <button onClick={handleLeave}><TbLogout size={24} stroke="#54656F"/></button>
                     </div>
 
                 </div>
-                {/*<div className={styles.chat__controls__searchInput}>*/}
-                {/*    <Input value={phone} onChange={userPhoneChange} placeholder="Введите номер" type="number"/>*/}
-                {/*    <button onClick={sendMessage}><FilterIcon/></button>*/}
-                {/*</div>*/}
+                <div className={styles.chat__controls__searchInput}>
+                    <Input placeholder="Введите ник" type="text"/>
+                    <button><FilterIcon/></button>
+                </div>
 
                 <div className={styles.chat__controls__contacts}>
                     <ul>
                         {users.map((user, index) => {
-                            return <li key={uuidv4()}>{user.username}</li>
+                            if (user.username === localStorage.getItem("username")) {
+                                return <li key={uuidv4()}>(Вы) {user.username}{user && `#${index}`}</li>
+                            }
+                            return <li key={uuidv4()}>{user.username}{user && `#${index}`}</li>
                         })}
                     </ul>
                 </div>
             </div>
 
             <div className={styles.chat__textfield}>
+                <div className={styles.chat__textfield__typingStatus}>
+                    {status && <p>{status} <DotsIcon/></p>}
+                </div>
                 <div className={styles.chat__textfield__log}>
-                    <button className={styles.chat__textfield__leaveButton} onClick={handleLeave}>Leave chat</button>
                     {messages.map((message: Message) => {
                         return message.username === localStorage.getItem("username")
                             ? (
@@ -145,7 +171,9 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                     })}
                 </div>
                 <form onSubmit={handleSendMessage} className={styles.chat__textfield__controls}>
-                    <Input value={message} placeholder="Написать..." type="text"
+                    <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message}
+                           placeholder="Написать..."
+                           type="text"
                            onChange={handleMessage}></Input>
                     <button type="submit">Send</button>
                 </form>

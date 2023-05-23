@@ -31,13 +31,20 @@ io.on("connection", (client: any) => {
     })
     client.on("newUser", (data) => {
         users.push(data)
-
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        // @ts-ignore
-        users = users.filter((user) => user.id !== data.id)
+        if (users) {
+            // @ts-ignore
+            users = users.filter((user) => user.id !== data.id)
+        }
         io.emit("disconnected", users)
+    })
+    client.on('startTyping', (data) => {
+        io.emit('responseStartTyping', data)
+    })
+    client.on('endTyping', (data) => {
+        io.emit('responseEndTyping', data)
     })
 })
 
