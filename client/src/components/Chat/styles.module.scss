@@ -170,45 +170,4 @@
       color: $main-white;
     }
   }
-
-  &__controls {
-    display: flex;
-    align-items: center;
-    width: calc(100% - 20px);
-
-    input {
-      border: 1px solid $main-green;
-      background-color: $main-white;
-      margin: 30px 20px 20px 20px;
-      justify-self: flex-end;
-      padding: 20px;
-      align-self: end;
-    }
-
-    button {
-      border: 1px solid $main-green;
-      padding: 10px 20px;
-      margin-top: 8px;
-      background-color: $main-green;
-      color: $main-white;
-      cursor: pointer;
-      border-radius: 8px;
-      box-sizing: border-box;
-
-      &:hover {
-        background-color: $main-grey;
-        color: $primary-title
-      }
-    }
-
-    &__emojiButton {
-      margin-right: 8px;
-    }
-
-    &__emojiPicker {
-      position: absolute;
-      bottom: 70px;
-      right: 20px;
-    }
-  }
 }

@@ -12,56 +12,50 @@ import FilterIcon from "../../assets/icons/FilterIcon";
 
 import {useNavigate} from "react-router-dom";
 import {v4 as uuidv4} from 'uuid';
-import {UserModel} from "../../models/user.model";
+import {User} from "../../models/user.model";
 import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import {TbLogout} from "react-icons/tb"
 import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
+import MessageBox from "../MessageBox/MessageBox";
+import {useChatStore} from "../../store/chat.store";
+import {Message} from "../../models/message.model";
+import {io} from "socket.io-client";
+
+const socket = io("http://localhost:5000")
 
 interface chatProps {
-    socket: any
+
     children?: React.ReactNode
 }
 
-interface Message {
-    id: string,
-    socketId: string,
-    username: string,
-    message: string,
-    timestamp: string,
-}
-
-const Chat: React.FC<chatProps> = ({socket}) => {
+const Chat: React.FC<chatProps> = () => {
     const navigate = useNavigate()
 
-    const [message, setMessage] = useState<string>("")
+    const {
+        users,
+        messages,
+        handleNewUser,
+        handleDisconnectUser,
+        handleNewMessage
+    } = useChatStore(state => state)
+
     const [status, setStatus] = useState<string>("")
 
     const [emojiPicker, setEmojiPicker] = useState<boolean>(false)
     const [currentEmoji, setCurrentEmoji] = useState<React.ReactNode | null>(null)
 
-    const [messages, setMessages] = useState<Message[]>([])
-    const [users, setUsers] = useState<UserModel[]>([])
 
     useEffect(() => {
-        socket.on('connectNewUser', (data: any) => setUsers(data))
-        localStorage.setItem("users", JSON.stringify(users))
-    }, [users, socket])
+        handleNewUser()
+    }, [handleNewUser])
 
     useEffect(() => {
-        socket.on('disconnected', (data: any) => {
-            setUsers(data)
-        })
-    }, [users, socket])
+        handleDisconnectUser()
+    }, [handleDisconnectUser])
 
     useEffect(() => {
-        socket.on("response", (data: Message) => {
-            setMessages([...messages, data])
-        })
-    }, [messages, socket])
-
-    const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMessage(e.target.value)
-    }
+        handleNewMessage()
+    }, [handleNewMessage])
 
     const messageRef = useRef<null | HTMLDivElement>(null);
 
@@ -76,46 +70,31 @@ const Chat: React.FC<chatProps> = ({socket}) => {
         }
     })
 
-    const handleSendMessage = (e: React.ChangeEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        if (message.trim() && localStorage.getItem("username")) {
-            socket.emit("message", {
-                id: uuidv4(),
-                socketId: socket.id,
-                username: localStorage.getItem("username"),
-                message,
-                timestamp: new Date().toLocaleTimeString("ru-RU", {timeStyle: "short"})
-            })
-        }
-        setMessage("")
-    }
-
-    const handleLeave = () => {
-        localStorage.removeItem("username")
-        socket.emit('disconnectUser', users.find((user) => user.id))
-        navigate("/")
-    }
-
-    const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.code === "Backspace" || e.code === "Space") {
-            return
-        }
-        socket.emit('startTyping', `${localStorage.getItem("username")} is typing`)
-    }
-    const handleEndTyping = () => {
-        setTimeout(() => {
-            socket.emit('endTyping', "")
-        }, 1000)
-    }
-
-    useEffect(() => {
-        socket.on("responseStartTyping", (data: any) => setStatus(data))
-    }, [socket])
-
-    useEffect(() => {
-        socket.on("responseEndTyping", (data: any) => setStatus(data))
-    }, [socket])
+    // const handleLeave = () => {
+    //     localStorage.removeItem("username")
+    //     socket.emit('disconnectUser', users?.find((user) => user.id))
+    //     navigate("/")
+    // }
+    //
+    // const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (e.code === "Backspace" || e.code === "Space") {
+    //         return
+    //     }
+    //     socket.emit('startTyping', `${localStorage.getItem("username")} is typing`)
+    // }
+    // const handleEndTyping = () => {
+    //     setTimeout(() => {
+    //         socket.emit('endTyping', "")
+    //     }, 1000)
+    // }
+    //
+    // useEffect(() => {
+    //     socket.on("responseStartTyping", (data: any) => setStatus(data))
+    // }, [socket])
+    //
+    // useEffect(() => {
+    //     socket.on("responseEndTyping", (data: any) => setStatus(data))
+    // }, [socket])
 
     const toggleEmojiPicker = () => {
         setEmojiPicker(!emojiPicker)
@@ -123,7 +102,7 @@ const Chat: React.FC<chatProps> = ({socket}) => {
 
     const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
         setCurrentEmoji(emojiData.emoji)
-        setMessage(emojiData.emoji)
+        // setMessage(emojiData.emoji)
         setEmojiPicker(false)
     };
 
@@ -139,7 +118,7 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                         <button><StatusIcon/></button>
                         <button><NewChatIcon/></button>
                         <button><SettingsIcon/></button>
-                        <button onClick={handleLeave}><TbLogout size={24} stroke="#54656F"/></button>
+                        <button><TbLogout size={24} stroke="#54656F"/></button>
                     </div>
 
                 </div>
@@ -150,11 +129,11 @@ const Chat: React.FC<chatProps> = ({socket}) => {
 
                 <div className={styles.chat__controls__contacts}>
                     <ul>
-                        {users.map((user, index) => {
+                        {users.map((user: User) => {
                             if (user.username === localStorage.getItem("username")) {
-                                return <li key={uuidv4()}>(Вы) {user.username}{user && `#${index}`}</li>
+                                return <li key={user.id}>(Вы) {user.username}{user && `#${user.id}`}</li>
                             }
-                            return <li key={uuidv4()}>{user.username}{user && `#${index}`}</li>
+                            return <li key={user.id}>{user.username}{user && `#${user.id}`}</li>
                         })}
                     </ul>
                 </div>
@@ -170,7 +149,7 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                             ? (
                                 <div ref={messageRef} key={message.id}
                                      className={styles.chat__textfield__log_youMessage}>
-                                    <p>{message.message}</p>
+                                    <p>{message.text}</p>
                                     <p className={styles.chat__textfield__log_message_time}>{message.timestamp}</p>
                                 </div>
                             )
@@ -178,27 +157,13 @@ const Chat: React.FC<chatProps> = ({socket}) => {
                                 <div ref={messageRef} key={message.socketId}
                                      className={styles.chat__textfield__log_message}>
                                     <h4>{message.username}</h4>
-                                    <p>{message.message}</p>
+                                    <p>{message.text}</p>
                                     <p className={styles.chat__textfield__log_message_time}>{message.timestamp}</p>
                                 </div>
                             )
                     })}
                 </div>
-                <form onSubmit={handleSendMessage} className={styles.chat__textfield__controls}>
-                    <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message}
-                           placeholder="Написать..."
-                           type="text"
-                           onChange={handleMessage}></Input>
-                    <button className={styles.chat__textfield__controls__emojiButton}
-                            onClick={toggleEmojiPicker}>{currentEmoji ? currentEmoji : "Emoji"}
-                    </button>
-                    <button type="submit">Send</button>
-                </form>
-                {emojiPicker &&
-                    <div className={styles.chat__textfield__controls__emojiPicker}><EmojiPicker
-                        onEmojiClick={onEmojiClick}
-                        width={300}/>
-                    </div>}
+                <MessageBox/>
             </div>
         </div>
     );
