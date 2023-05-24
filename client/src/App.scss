@@ -6,11 +6,12 @@
 }
 
 *::-webkit-scrollbar {
-  width: 13px;
+  width: 12px;
 }
 
 *::-webkit-scrollbar-track {
   background: #ffffff;
+  opacity: 0;
 }
 
 *::-webkit-scrollbar-thumb {

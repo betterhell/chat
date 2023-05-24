@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {users} from "./data";
+
 
 const PORT = 5000
 const cors = require("cors")
@@ -8,6 +8,8 @@ const app = express()
 const httpServer = require("http").Server(app)
 
 app.use(cors());
+
+export let users = []
 
 const io = require("socket.io")(httpServer, {
     cors: {
@@ -26,7 +28,8 @@ io.on("connection", (client: any) => {
     client.on("disconnect", () => {
         console.log(`User with id ${client.id} is disconnected!`)
     })
-    client.on("message", (data) => {
+    client.on("message", (data: any) => {
+        console.log(data)
         io.emit("response", data)
     })
     client.on("newUser", (data) => {
@@ -34,9 +37,8 @@ io.on("connection", (client: any) => {
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        if (users) {
-            // @ts-ignore
-            users = users.filter((user) => user.id !== data.id)
+        if (users.length <= 1) {
+            users = users?.filter((user: any) => user.id !== data.id)
         }
         io.emit("disconnected", users)
     })

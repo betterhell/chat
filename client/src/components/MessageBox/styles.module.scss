@@ -1,0 +1,50 @@
+@import "../../styles/variables";
+
+.message_box {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 20px;
+  gap: 10px;
+
+  input {
+    border: 1px solid $main-green;
+    background-color: $main-white;
+    justify-self: flex-end;
+    padding: 20px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    gap: 10px;
+
+  }
+
+  &__emoji_toggler, &__send_message {
+    display: flex;
+    align-items: center;
+    border: 1px solid $main-green;
+    padding: 0 15px;
+    height: 42px;
+    background-color: $main-green;
+    color: $main-white;
+    cursor: pointer;
+    border-radius: 8px;
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: $main-grey;
+      color: $primary-title
+    }
+  }
+
+  &__emoji_picker {
+    position: absolute;
+    bottom: 70px;
+    right: 20px;
+  }
+}
