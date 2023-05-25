@@ -35,7 +35,7 @@ body {
 
   &:before {
     content: "";
-    height: 127px;
+    height: 50%;
     top: 0;
     width: 100%;
     background-color: $app-background-stripe;
@@ -50,6 +50,6 @@ body {
   align-items: center;
   border-radius: 6px;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
-  margin: 19px auto;
 }
