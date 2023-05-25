@@ -11,20 +11,18 @@ import Input from "../../UI/Input/Input";
 import FilterIcon from "../../assets/icons/FilterIcon";
 
 import {useNavigate} from "react-router-dom";
-import {v4 as uuidv4} from 'uuid';
 import {User} from "../../models/user.model";
 import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import {TbLogout} from "react-icons/tb"
-import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 import MessageBox from "../MessageBox/MessageBox";
 import {useChatStore} from "../../store/chat.store";
 import {Message} from "../../models/message.model";
-import {io} from "socket.io-client";
+
+import {io} from "socket.io-client"
 
 const socket = io("http://localhost:5000")
 
 interface chatProps {
-
     children?: React.ReactNode
 }
 
@@ -34,28 +32,25 @@ const Chat: React.FC<chatProps> = () => {
     const {
         users,
         messages,
-        handleNewUser,
+        handleConnectNewUser,
         handleDisconnectUser,
-        handleNewMessage
-    } = useChatStore(state => state)
+        handleNewMessage,
+        handleLeaveUser
+    } = useChatStore()
 
     const [status, setStatus] = useState<string>("")
 
-    const [emojiPicker, setEmojiPicker] = useState<boolean>(false)
-    const [currentEmoji, setCurrentEmoji] = useState<React.ReactNode | null>(null)
-
-
     useEffect(() => {
-        handleNewUser()
-    }, [handleNewUser])
+        handleConnectNewUser()
+    }, [handleConnectNewUser, socket])
 
     useEffect(() => {
         handleDisconnectUser()
-    }, [handleDisconnectUser])
+    }, [handleDisconnectUser, socket])
 
     useEffect(() => {
         handleNewMessage()
-    }, [handleNewMessage])
+    }, [handleNewMessage, socket])
 
     const messageRef = useRef<null | HTMLDivElement>(null);
 
@@ -70,11 +65,11 @@ const Chat: React.FC<chatProps> = () => {
         }
     })
 
-    // const handleLeave = () => {
-    //     localStorage.removeItem("username")
-    //     socket.emit('disconnectUser', users?.find((user) => user.id))
-    //     navigate("/")
-    // }
+    const handleLeave = () => {
+        handleLeaveUser()
+        localStorage.removeItem("chat-store")
+        navigate("/")
+    }
     //
     // const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
     //     if (e.code === "Backspace" || e.code === "Space") {
@@ -96,15 +91,6 @@ const Chat: React.FC<chatProps> = () => {
     //     socket.on("responseEndTyping", (data: any) => setStatus(data))
     // }, [socket])
 
-    const toggleEmojiPicker = () => {
-        setEmojiPicker(!emojiPicker)
-    }
-
-    const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
-        setCurrentEmoji(emojiData.emoji)
-        // setMessage(emojiData.emoji)
-        setEmojiPicker(false)
-    };
 
     return (
         <div className={styles.chat}>
@@ -118,10 +104,11 @@ const Chat: React.FC<chatProps> = () => {
                         <button><StatusIcon/></button>
                         <button><NewChatIcon/></button>
                         <button><SettingsIcon/></button>
-                        <button><TbLogout size={24} stroke="#54656F"/></button>
+                        <button onClick={handleLeave}><TbLogout size={24} stroke="#54656F"/></button>
                     </div>
 
                 </div>
+
                 <div className={styles.chat__controls__searchInput}>
                     <Input placeholder="Введите ник" type="text"/>
                     <button><FilterIcon/></button>
@@ -129,11 +116,10 @@ const Chat: React.FC<chatProps> = () => {
 
                 <div className={styles.chat__controls__contacts}>
                     <ul>
-                        {users.map((user: User) => {
-                            if (user.username === localStorage.getItem("username")) {
-                                return <li key={user.id}>(Вы) {user.username}{user && `#${user.id}`}</li>
-                            }
-                            return <li key={user.id}>{user.username}{user && `#${user.id}`}</li>
+                        {users.map((user: User, index) => {
+                            return user.username === localStorage.getItem("username")
+                                ? <li key={user.id}>(Вы) {user.username}{user && `#${index}`}</li>
+                                : <li key={user.id}>{user.username}{user && `#${index}`}</li>
                         })}
                     </ul>
                 </div>
@@ -154,7 +140,7 @@ const Chat: React.FC<chatProps> = () => {
                                 </div>
                             )
                             : (
-                                <div ref={messageRef} key={message.socketId}
+                                <div ref={messageRef} key={message.id}
                                      className={styles.chat__textfield__log_message}>
                                     <h4>{message.username}</h4>
                                     <p>{message.text}</p>

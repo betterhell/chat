@@ -1,8 +1,8 @@
 export interface User {
-    username: string,
+    username: string
     id: string
 }
 
 export interface Users {
-    users: User[] | []
+    userList: User[]
 }

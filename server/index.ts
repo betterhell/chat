@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 
-
 const PORT = 5000
 const cors = require("cors")
 const express = require("express")
@@ -23,7 +22,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 //socket.io connection
-io.on("connection", (client: any) => {
+io.on("connection", (client) => {
     console.log(`User with id ${client.id} is connected!`)
     client.on("disconnect", () => {
         console.log(`User with id ${client.id} is disconnected!`)
@@ -37,9 +36,8 @@ io.on("connection", (client: any) => {
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        if (users.length <= 1) {
-            users = users?.filter((user: any) => user.id !== data.id)
-        }
+        const arrayWithoutUser = users?.filter((user: any) => user.id !== data.id)
+        users = arrayWithoutUser
         io.emit("disconnected", users)
     })
     client.on('startTyping', (data) => {
