@@ -28,7 +28,6 @@ io.on("connection", (client) => {
         console.log(`User with id ${client.id} is disconnected!`)
     })
     client.on("message", (data: any) => {
-        console.log(data)
         io.emit("response", data)
     })
     client.on("newUser", (data) => {
@@ -36,8 +35,7 @@ io.on("connection", (client) => {
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        const arrayWithoutUser = users?.filter((user: any) => user.id !== data.id)
-        users = arrayWithoutUser
+        users = users.filter((user) => user.id !== data?.id)
         io.emit("disconnected", users)
     })
     client.on('startTyping', (data) => {

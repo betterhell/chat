@@ -17,10 +17,8 @@ import {TbLogout} from "react-icons/tb"
 import MessageBox from "../MessageBox/MessageBox";
 import {useChatStore} from "../../store/chat.store";
 import {Message} from "../../models/message.model";
+import {socket} from "../../socket";
 
-import {io} from "socket.io-client"
-
-const socket = io("http://localhost:5000")
 
 interface chatProps {
     children?: React.ReactNode
@@ -35,25 +33,32 @@ const Chat: React.FC<chatProps> = () => {
         handleConnectNewUser,
         handleDisconnectUser,
         handleNewMessage,
-        handleLeaveUser
+        handleLeaveUser,
+        typingStatus,
     } = useChatStore()
 
-    const [status, setStatus] = useState<string>("")
 
     useEffect(() => {
-        handleConnectNewUser()
-    }, [handleConnectNewUser, socket])
+        socket.on("connectNewUser", (data: User) => {
+            handleConnectNewUser(data)
+        })
+    }, [socket])
 
     useEffect(() => {
-        handleDisconnectUser()
-    }, [handleDisconnectUser, socket])
+        socket.on("disconnected", (data: User) => {
+            handleDisconnectUser(data)
+        })
+    }, [socket])
 
     useEffect(() => {
-        handleNewMessage()
-    }, [handleNewMessage, socket])
+        socket.on("response", (data: Message) => {
+            if (data) {
+                handleNewMessage(data)
+            }
+        })
+    }, [socket])
 
     const messageRef = useRef<null | HTMLDivElement>(null);
-
     useEffect(() => {
         if (messageRef.current) {
             messageRef.current.scrollIntoView(
@@ -67,30 +72,8 @@ const Chat: React.FC<chatProps> = () => {
 
     const handleLeave = () => {
         handleLeaveUser()
-        localStorage.removeItem("chat-store")
         navigate("/")
     }
-    //
-    // const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (e.code === "Backspace" || e.code === "Space") {
-    //         return
-    //     }
-    //     socket.emit('startTyping', `${localStorage.getItem("username")} is typing`)
-    // }
-    // const handleEndTyping = () => {
-    //     setTimeout(() => {
-    //         socket.emit('endTyping', "")
-    //     }, 1000)
-    // }
-    //
-    // useEffect(() => {
-    //     socket.on("responseStartTyping", (data: any) => setStatus(data))
-    // }, [socket])
-    //
-    // useEffect(() => {
-    //     socket.on("responseEndTyping", (data: any) => setStatus(data))
-    // }, [socket])
-
 
     return (
         <div className={styles.chat}>
@@ -127,7 +110,7 @@ const Chat: React.FC<chatProps> = () => {
 
             <div className={styles.chat__textfield}>
                 <div className={styles.chat__textfield__typingStatus}>
-                    {status && <p>{status} <DotsIcon/></p>}
+                    {typingStatus && <p>{typingStatus} <DotsIcon/></p>}
                 </div>
                 <div className={styles.chat__textfield__log}>
                     {messages.map((message: Message) => {

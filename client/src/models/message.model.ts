@@ -4,7 +4,3 @@ export interface Message {
     text: string
     timestamp: string
 }
-
-export interface Messages {
-    messageList: Message[]
-}

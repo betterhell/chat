@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from "./styles.module.scss";
 
 import Input from "../../UI/Input/Input";
@@ -9,20 +9,9 @@ import {RiMailSendLine as SendMessageIcon} from "react-icons/ri"
 import {BsEmojiSmile as EmojiIcon} from "react-icons/bs"
 
 import {useChatStore} from "../../store/chat.store";
+import {socket} from "../../socket";
 
-interface MessageBoxProps {
-    handleStartTyping?: () => void
-    handleEndTyping?: () => void
-    handleMessage?: () => void
-    handleSendMessage?: () => void
-}
-
-const MessageBox: React.FC<MessageBoxProps> = (
-    {
-        handleStartTyping,
-        handleEndTyping,
-    }) => {
-
+const MessageBox = () => {
     const {
         message,
         setMessage,
@@ -31,11 +20,23 @@ const MessageBox: React.FC<MessageBoxProps> = (
         emojiToggle,
         toggleEmojiPicker,
         currentEmoji,
+        handleStartTyping,
+        handleEndTyping,
+        setTypingStatus
     } = useChatStore()
 
     const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
+
+    useEffect(() => {
+        socket.on("responseStartTyping", (data: string) => setTypingStatus(data))
+    }, [socket])
+
+    useEffect(() => {
+        socket.on("responseEndTyping", (data: string) => setTypingStatus(data))
+    }, [socket])
+
 
     return (
         <>
