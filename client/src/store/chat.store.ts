@@ -1,10 +1,9 @@
 import {create} from "zustand";
-import {devtools, persist} from "zustand/middleware";
+import {devtools} from "zustand/middleware";
 import React from "react";
 import {v4 as uuidv4} from "uuid";
 import {User} from "../models/user.model";
 import {Message} from "../models/message.model";
-import {EmojiClickData} from "emoji-picker-react";
 import {socket} from "../socket";
 
 
@@ -16,11 +15,9 @@ interface chatStoreState {
     currentEmoji: string
     messages: Message[]
     isLoading: boolean
-    emojiToggle: boolean
     typingStatus: string,
     setTypingStatus: (value: string) => void
-    toggleEmojiPicker: () => void
-    onEmojiClick: (emojiData: EmojiClickData) => void
+
     handleSendMessage: (e: React.ChangeEvent<HTMLFormElement>) => void
     handleNewMessage: (data: Message) => void
     handleStartTyping: (e: React.KeyboardEvent<HTMLInputElement>) => void
@@ -41,7 +38,6 @@ export const useChatStore = create<chatStoreState>()(
             users: [],
             messages: [],
             isLoading: false,
-            emojiToggle: false,
             typingStatus: "",
 
             setMessage: (message) => {
@@ -50,17 +46,6 @@ export const useChatStore = create<chatStoreState>()(
 
             setTypingStatus: (value) => {
                 set({typingStatus: value})
-            },
-
-            // emoji Picker funcs
-            toggleEmojiPicker: () => {
-                set((state) => ({emojiToggle: !state.emojiToggle}))
-            },
-
-            onEmojiClick: (emojiData) => {
-                set({currentEmoji: emojiData.emoji})
-                set({message: get().message + emojiData.emoji})
-                set({emojiToggle: false})
             },
 
             // sending message funcs

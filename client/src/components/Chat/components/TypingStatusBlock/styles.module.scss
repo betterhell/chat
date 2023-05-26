@@ -1,0 +1,15 @@
+.typingStatus {
+  position: absolute;
+  bottom: 55px;
+  left: 0;
+  background-color: transparent;
+
+  p {
+    font-size: 13px;
+  }
+
+  svg {
+    width: 30px;
+    height: 9px;
+  }
+}
