@@ -1,0 +1,22 @@
+@import "../../../../styles/variables";
+
+.messages_log {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: $main-white;
+  height: calc(100vh - 36px);
+  width: 100%;
+
+  button {
+    height: 59px;
+    align-self: flex-end;
+    background-color: $warning-button;
+    cursor: pointer;
+    border: none;
+    padding: 3px 6px;
+    color: $main-white;
+  }
+}
+
