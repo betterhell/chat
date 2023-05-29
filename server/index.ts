@@ -3,13 +3,53 @@ import {Request, Response} from "express";
 const PORT = 5000
 const cors = require("cors")
 const express = require("express")
+
 const app = express()
 const httpServer = require("http").Server(app)
+const {connectToDb, getDb} = require("./db")
 
 app.use(cors());
 
 export let users = []
 
+let db
+
+connectToDb((error) => {
+    if (!error) {
+        httpServer.listen(PORT, (err) => {
+            err ? console.log(err) : console.log(`Server is up on port ${PORT}!`)
+        })
+        db = getDb()
+    } else {
+        console.log(`DB connection error: ${error}`)
+    }
+})
+
+app.get('/', (req: Request, res: Response) => {
+
+    res.send('Hello API!')
+})
+
+app.get('/movies', (req: Request, res: Response) => {
+    const movies = []
+
+    db
+        .collection("movies")
+        .find()
+        .forEach((movie) => movies.push(movie))
+        .then(() => {
+            res
+                .status(200)
+                .json(movies)
+        })
+        .catch(() => {
+            res
+                .status(500)
+                .json({error: "Something went wrong... Try later."})
+        })
+})
+
+//socket.io connection
 const io = require("socket.io")(httpServer, {
     cors: {
         origin: "*",
@@ -17,11 +57,6 @@ const io = require("socket.io")(httpServer, {
     }
 })
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello API!')
-})
-
-//socket.io connection
 io.on("connection", (client) => {
     console.log(`User with id ${client.id} is connected!`)
     client.on("disconnect", () => {
@@ -46,6 +81,3 @@ io.on("connection", (client) => {
     })
 })
 
-httpServer.listen(PORT, () => {
-    console.log('Server is up!')
-})
