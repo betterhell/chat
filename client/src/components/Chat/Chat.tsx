@@ -36,15 +36,17 @@ const Chat = () => {
     }, [socket])
 
     return (
-        <div className={styles.chat}>
-            <div className={styles.chat__aside}>
-                <UserProfileBlock/>
-                <ContactsBlock/>
-            </div>
+        <div className={styles.wrapper}>
+            <div className={styles.chat}>
+                <div className={styles.chat__aside}>
+                    <UserProfileBlock/>
+                    <ContactsBlock/>
+                </div>
 
-            <div className={styles.chat__main}>
-                <MessagesLogBlock/>
-                <SendMessageBlock/>
+                <div className={styles.chat__main}>
+                    <MessagesLogBlock/>
+                    <SendMessageBlock/>
+                </div>
             </div>
         </div>
     );
