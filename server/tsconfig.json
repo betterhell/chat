@@ -3,7 +3,7 @@
     "target": "es2022",
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": true,
+    "sourceMap": true
   },
   "files": [
     "./node_modules/@types/express/index.d.ts"
@@ -15,6 +15,6 @@
     "node_modules"
   ],
   "lib": [
-    "es2017"
+    "es6"
   ]
 }
