@@ -6,7 +6,6 @@ import {User} from "../models/user.model";
 import {Message} from "../models/message.model";
 import {socket} from "../socket";
 
-
 interface chatStoreState {
     user: string,
     users: User[]
@@ -17,7 +16,6 @@ interface chatStoreState {
     isLoading: boolean
     typingStatus: string,
     setTypingStatus: (value: string) => void
-
     handleSendMessage: (e: React.ChangeEvent<HTMLFormElement>) => void
     handleNewMessage: (data: Message) => void
     handleStartTyping: (e: React.KeyboardEvent<HTMLInputElement>) => void
@@ -32,6 +30,8 @@ interface chatStoreState {
 export const useChatStore = create<chatStoreState>()(
     devtools(
         (set, get) => ({
+            username: "",
+            password: "",
             user: "",
             message: "",
             currentEmoji: "",
@@ -67,7 +67,6 @@ export const useChatStore = create<chatStoreState>()(
                 // @ts-ignore
                 set({messages: [...get().messages, data]})
             },
-
 
             // users funcs
             handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => {
