@@ -7,17 +7,17 @@ const app = express()
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 const httpServer = require("http").Server(app)
-const movieRouter = require("./routes/movie.routes")
+const errorMiddleware = require("./middlewares/error.middleware")
 const userRouter = require("./routes/user.routes")
 
 export let users = []
 
 app.use(cors());
+app.use(cookieParser())
 app.use(express.json())
 app.use(bodyParser.json())
-app.use(cookieParser())
-app.use(movieRouter)
 app.use(userRouter)
+app.use(errorMiddleware)
 
 mongoose
     .connect(DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -35,6 +35,8 @@ export const io = require("socket.io")(httpServer, {
         methods: ["GET", "POST"]
     }
 })
+
+global.onlineUsers = new Map()
 
 io.on("connection", (client) => {
     console.log(`User with id ${client.id} is connected!`)
