@@ -1,31 +1,25 @@
 const nodemailer = require("nodemailer")
 
-const SMTP_HOST = "smtp.gmail.com"
-const SMTP_PORT = 587
-const SMTP_USER = "dev.betterhell@gmail.com"
-const SMTP_PASSWORD = "hyyrravspopomngh"
-const API_URL = "http://localhost:5000"
-
 class MailService {
     private transporter: any;
 
     constructor() {
         this.transporter = nodemailer.createTransport({
-            host: SMTP_HOST,
-            port: SMTP_PORT,
+            host: process.env.VITE_SMTP_HOST,
+            port: process.env.VITE_SMTP_PORT,
             secure: false,
             auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASSWORD
+                user: process.env.VITE_SMTP_USER,
+                pass: process.env.VITE_SMTP_PASSWORD
             }
         })
     }
 
     async sendActivationMail(to, link) {
         await this.transporter.sendMail({
-            from: SMTP_USER,
+            from: process.env.VITE_SMTP_USER,
             to,
-            subject: `Activate your account ${API_URL}`,
+            subject: `Activate your account ${process.env.VITE_API_URL}`,
             text: "",
             html:
                 `

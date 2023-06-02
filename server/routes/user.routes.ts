@@ -6,6 +6,7 @@ const {
     registerUser,
     loginUser,
     deleteUser,
+    findUser,
     updateUser,
     logoutUser,
     activateUser,
@@ -13,6 +14,7 @@ const {
 } = require("../controllers/userController")
 
 router.delete('/user/:id', deleteUser)
+router.get('/user', findUser)
 router.patch('/user/:id', updateUser)
 router.post('/registration', body("username").isLength({
         min: 3,

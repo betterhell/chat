@@ -1,7 +1,6 @@
-const PORT = 5000
-const DB_URL = 'mongodb+srv://betterhell:598213q@chatcluster.olsky05.mongodb.net/chatDB?retryWrites=true&w=majority';
 const cors = require("cors")
 const express = require("express")
+require('dotenv').config()
 const mongoose = require("mongoose")
 const app = express()
 const bodyParser = require("body-parser")
@@ -20,12 +19,14 @@ app.use(userRouter)
 app.use(errorMiddleware)
 
 mongoose
-    .connect(DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+    .connect(process.env.VITE_DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log('Connected to MongoDB'))
     .catch((error) => console.log(`DB connection error: ${error}`))
 
-httpServer.listen(PORT, (err) => {
-    err ? console.log(err) : console.log(`Server is up on port ${PORT}!`)
+
+const port = process.env.VITE_PORT || 5000
+httpServer.listen(port, (err) => {
+    err ? console.log(err) : console.log(`Server is up on port ${port}!`)
 })
 
 //socket.io connection
