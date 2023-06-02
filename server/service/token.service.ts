@@ -1,14 +1,11 @@
 const jwt = require("jsonwebtoken")
 
-const VITE_SECRET_JWT_ACCESS_CODE = "ADAKLFKALASDKJ21315lSAD;a"
-const VITE_SECRET_JWT_REFRESH_CODE = "1249175KLJSAKJASKK;SA12"
-
 const Token = require("../models/token")
 
 class TokenService {
     async generateTokens(payload) {
-        const accessToken = jwt.sign(payload, VITE_SECRET_JWT_ACCESS_CODE, {expiresIn: "30m"})
-        const refreshToken = jwt.sign(payload, VITE_SECRET_JWT_REFRESH_CODE, {expiresIn: "30d"})
+        const accessToken = jwt.sign(payload, process.env.VITE_SECRET_JWT_ACCESS_CODE, {expiresIn: "30m"})
+        const refreshToken = jwt.sign(payload, process.env.VITE_SECRET_JWT_REFRESH_CODE, {expiresIn: "30d"})
         return {
             accessToken,
             refreshToken
@@ -17,8 +14,7 @@ class TokenService {
 
     validateAccessToken(token) {
         try {
-            const userData = jwt.verify(token, VITE_SECRET_JWT_ACCESS_CODE)
-            return userData
+            return jwt.verify(token, process.env.VITE_SECRET_JWT_ACCESS_CODE)
         } catch (error) {
             return null
         }
@@ -26,8 +22,7 @@ class TokenService {
 
     validateRefreshToken(token) {
         try {
-            const userData = jwt.verify(token, VITE_SECRET_JWT_REFRESH_CODE)
-            return userData
+            return jwt.verify(token, process.env.VITE_SECRET_JWT_REFRESH_CODE)
         } catch (error) {
             return null
         }
@@ -40,18 +35,15 @@ class TokenService {
             tokenData.refreshToken = refreshToken
             return tokenData.save()
         }
-        const token = await Token.create({user: userId, refreshToken})
-        return token
+        return await Token.create({user: userId, refreshToken})
     }
 
     async removeToken(refreshToken) {
-        const tokenData = await Token.deleteOne({refreshToken})
-        return tokenData
+        return await Token.deleteOne({refreshToken})
     }
 
     async findToken(refreshToken) {
-        const tokenData = await Token.findOne({refreshToken})
-        return tokenData
+        return await Token.findOne({refreshToken})
     }
 }
 

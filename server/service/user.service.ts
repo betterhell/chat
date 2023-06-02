@@ -1,18 +1,16 @@
-import {ObjectId} from "mongodb"
 import mongoose from "mongoose"
 
-const User = require("../models/user")
-const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
+
+const Token = require("../models/token")
+const User = require("../models/user")
+
 const UserDto = require("../dtos/user.dto")
 const ApiError = require("../exeptions/api.error")
 
 const mailService = require("./mail.service")
 const tokenService = require("./token.service")
-const Token = require("../models/token")
-
-const API_URL = "http://localhost:5000"
 
 
 class UserService {
@@ -31,13 +29,22 @@ class UserService {
                 password: hashPassword,
                 activationLink
             })
-            await mailService.sendActivationMail(email, `${API_URL}/activate/${activationLink}`)
+            await mailService.sendActivationMail(email, `${process.env.VITE_API_URL}/activate/${activationLink}`)
 
             const userDto = new UserDto(user)
             const tokens = await tokenService.generateTokens({...userDto})
             await tokenService.saveToken(userDto.id, tokens.refreshToken)
             return {...tokens, user: userDto}
         }
+    }
+
+
+    async getOneUser(username) {
+        const user = await User.findOne({username})
+        if (!user) {
+            throw ApiError.BadRequest("User not found.")
+        }
+        return user
     }
 
     async activate(activationLink) {
@@ -69,8 +76,7 @@ class UserService {
     }
 
     async logout(refreshToken) {
-        const token = await tokenService.removeToken(refreshToken)
-        return token
+        return await tokenService.removeToken(refreshToken)
     }
 
     async refresh(refreshToken) {
@@ -94,17 +100,26 @@ class UserService {
 
     async delete(userId) {
         if (!mongoose.Types.ObjectId.isValid(userId)) {
-            throw ApiError.BadRequest("User does not exist or incorrect id")
+            throw ApiError.BadRequest("Not valid id.")
         }
 
         const deletedUser = await User.findByIdAndDelete(userId)
-        const token = await Token.findOneAndDelete({user: userId})
+        await Token.findOneAndDelete({user: userId})
         return deletedUser
     }
 
+    async update(userId, userInfo) {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            throw ApiError.BadRequest("Not valid id.")
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, userInfo)
+        await updatedUser.save()
+        return updatedUser
+    }
+
     async getAllUsers() {
-        const users = await User.find()
-        return users
+        return await User.find()
     }
 }
 
