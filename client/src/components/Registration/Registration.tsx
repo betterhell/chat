@@ -1,44 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from "./styles.module.scss";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
 import {useUserStore} from "../../store/user.store";
+import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
+import Error from "../Error/Error";
 
-const SignUp = () => {
-    const {username, email, password} = useUserStore()
-    const {handleChangeUsername, handleChangeEmail, handleChangePassword} = useUserStore()
+const Registration = () => {
+    const [username, setUsername] = useState<string>("")
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
 
-    const register = async (e: React.FormEvent<HTMLFormElement>) => {
+    const {registration, isLoading, isError} = useUserStore()
+
+    const registrationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        await axios.post("http://localhost:5000/sign-up", {
-            username,
-            email,
-            password,
-        }).then(({data}) => {
-            console.log(data)
-        }).catch(error => {
-            console.log(error)
-        })
+        registration(username, email, password)
     }
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.sign_up}>
-                <form onSubmit={register}>
+                <form onSubmit={registrationSubmit}>
                     <h1>Sign Up</h1>
                     <div className={styles.sign_up__id}>
-                        <label htmlFor="nickname">
-                            Nickname
+                        <label htmlFor="username">
+                            Username
                         </label>
                         <input
                             value={username}
-                            onChange={handleChangeUsername}
+                            onChange={(e) => setUsername(e.target.value)}
                             required={true}
                             autoComplete="off"
-                            placeholder="Enter your nickname"
-                            name="nickname"
+                            placeholder="Enter your username"
+                            name="username"
                             type="text"/>
                     </div>
                     <div className={styles.sign_up__id}>
@@ -47,7 +43,7 @@ const SignUp = () => {
                         </label>
                         <input
                             value={email}
-                            onChange={handleChangeEmail}
+                            onChange={(e) => setEmail(e.target.value)}
                             required={true}
                             autoComplete="off"
                             placeholder="Enter your email"
@@ -60,19 +56,20 @@ const SignUp = () => {
                         </label>
                         <input
                             value={password}
-                            onChange={handleChangePassword}
+                            onChange={(e) => setPassword(e.target.value)}
                             required={true}
                             autoComplete="off"
                             placeholder="Enter your password"
                             name="password"
                             type="password"/>
                     </div>
-                    <p><Link to="/sign-in">Registered yet?</Link></p>
-                    <button>Register</button>
+                    <Error/>
+                    <p><Link to="/login">Registered yet?</Link></p>
+                    {isLoading ? <button>Register</button> : <DotsIcon/>}
                 </form>
             </div>
         </div>
     )
 };
 
-export default SignUp;
+export default Registration;

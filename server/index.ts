@@ -11,9 +11,14 @@ const userRouter = require("./routes/user.routes")
 
 export let users = []
 
-app.use(cors());
-app.use(cookieParser())
+const corsOptions = {
+    origin: process.env.VITE_CLIENT_URL,
+    credentials: true,
+}
+
 app.use(express.json())
+app.use(cors(corsOptions));
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(userRouter)
 app.use(errorMiddleware)
@@ -52,7 +57,7 @@ io.on("connection", (client) => {
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        users = users.filter((user) => user.id !== data?.id)
+        global.onlineUsers = global.onlineUsers((user) => user.id !== data?.id)
         io.emit("disconnected", users)
     })
     client.on('startTyping', (data) => {

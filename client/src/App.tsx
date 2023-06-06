@@ -2,10 +2,10 @@ import React from 'react'
 import './App.scss'
 import {Route, Routes} from "react-router-dom";
 
-import SignIn from "./components/SignIn/SignIn";
+import Login from "./components/Login/Login";
 import Chat from "./components/Chat/Chat";
 import Main from "./components/Main/Main";
-import SignUp from "./components/SignUp/SignUp";
+import Registration from "./components/Registration/Registration";
 
 
 const App = () => {
@@ -13,8 +13,8 @@ const App = () => {
         <div className="App">
             <Routes>
                 <Route path="/" element={<Main/>}/>
-                <Route path="/sign-in" element={<SignIn/>}/>
-                <Route path="/sign-up" element={<SignUp/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/registration" element={<Registration/>}/>
                 <Route path="/chat" element={<Chat/>}/>
             </Routes>
         </div>

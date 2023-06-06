@@ -1,41 +1,34 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from "./styles.module.scss"
 
 import {Link, useNavigate} from "react-router-dom";
 import {useUserStore} from "../../store/user.store";
 import axios from "axios";
 
-const SignIn = () => {
+const Login = () => {
     const navigate = useNavigate()
 
-    const {email, password, isError} = useUserStore()
-    const {handleChangeEmail, handleChangePassword, handleIsError} = useUserStore()
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
 
-    const login = async (e: React.FormEvent<HTMLFormElement>) => {
+    const {login} = useUserStore()
+
+    const loginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        await axios.post("http://localhost:5000/sign-in", {
-            email,
-            password,
-        }).then(({data}) => {
-            console.log(data)
-        }).catch(error => {
-            handleIsError(error.response.data.error, error.response.status)
-        })
+        login(email, password)
     }
 
-    console.log(isError)
     return (
         <div className={styles.wrapper}>
             <div className={styles.sign_in}>
-                <form onSubmit={login}>
+                <form onSubmit={loginSubmit}>
                     <h1>Sign In</h1>
                     <div className={styles.sign_in__id}>
                         <label htmlFor="email">
                             Email
                         </label>
                         <input value={email}
-                               onChange={handleChangeEmail}
+                               onChange={(e) => setEmail(e.target.value)}
                                required={true}
                                name="email"
                                autoComplete="off"
@@ -47,14 +40,14 @@ const SignIn = () => {
                             Password
                         </label>
                         <input value={password}
-                               onChange={handleChangePassword}
+                               onChange={(e) => setPassword(e.target.value)}
                                required={true}
                                name="password"
                                autoComplete="off"
                                placeholder="Enter your password"
                                type="text"/>
                     </div>
-                    <p><Link to="/sign-up">Not registered yet?</Link></p>
+                    <p><Link to="/registration">Not registered yet?</Link></p>
                     <button>Войти</button>
                 </form>
             </div>
@@ -62,4 +55,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default Login;

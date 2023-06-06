@@ -19,9 +19,9 @@ const userSchema = new Schema({
         minLength: 6,
     },
     birthDate: {
-        day: {type: String},
-        month: {type: String},
-        year: {type: String}
+        day: {type: Number},
+        month: {type: Number},
+        year: {type: Number}
     },
     registeredAt: {
         type: Date,
