@@ -3,7 +3,6 @@ import styles from "./styles.module.scss"
 
 import {Link, useNavigate} from "react-router-dom";
 import {useUserStore} from "../../store/user.store";
-import axios from "axios";
 
 const Login = () => {
     const navigate = useNavigate()
@@ -16,6 +15,7 @@ const Login = () => {
     const loginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         login(email, password)
+        navigate("/chat")
     }
 
     return (

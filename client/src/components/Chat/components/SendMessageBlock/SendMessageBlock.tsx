@@ -11,6 +11,7 @@ import {BsEmojiSmile as EmojiIcon} from "react-icons/bs"
 import {useChatStore} from "../../../../store/chat.store";
 import {socket} from "../../../../socket";
 import TypingStatus from "../TypingStatusBlock/TypingStatus";
+import {useUserStore} from "../../../../store/user.store";
 
 const SendMessageBlock = () => {
     const {
@@ -47,7 +48,6 @@ const SendMessageBlock = () => {
     useEffect(() => {
         socket.on("responseEndTyping", (data: string) => setTypingStatus(data))
     }, [socket])
-
 
     return (
         <>
