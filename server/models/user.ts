@@ -19,13 +19,15 @@ const userSchema = new Schema({
         minLength: 6,
     },
     birthDate: {
-        type: String,
+        day: {type: String},
+        month: {type: String},
+        year: {type: String}
     },
-    profileImage: String,
     registeredAt: {
         type: Date,
         default: Date.now()
     },
+    friends: [],
     isActivatedMail: {type: Boolean, default: false},
     activationLink: {type: String}
 }, {

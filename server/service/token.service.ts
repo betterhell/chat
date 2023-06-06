@@ -4,7 +4,7 @@ const Token = require("../models/token")
 
 class TokenService {
     async generateTokens(payload) {
-        const accessToken = jwt.sign(payload, process.env.VITE_SECRET_JWT_ACCESS_CODE, {expiresIn: "30m"})
+        const accessToken = jwt.sign(payload, process.env.VITE_SECRET_JWT_ACCESS_CODE, {expiresIn: "30s"})
         const refreshToken = jwt.sign(payload, process.env.VITE_SECRET_JWT_REFRESH_CODE, {expiresIn: "30d"})
         return {
             accessToken,
