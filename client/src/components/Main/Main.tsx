@@ -6,7 +6,7 @@ const Main = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.context}>
-                <h1><Link to="/sign-in">Welcome to the CHAT!</Link></h1>
+                <h1><Link to="/login">Welcome to the CHAT!</Link></h1>
             </div>
 
             <div className={styles.area}>

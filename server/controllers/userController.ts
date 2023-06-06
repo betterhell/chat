@@ -1,4 +1,6 @@
-const userService = require("../service/user.service")
+import UserService from "../service/user.service";
+
+const userService = new UserService()
 const {validationResult} = require("express-validator")
 const ApiError = require("../exeptions/api.error")
 

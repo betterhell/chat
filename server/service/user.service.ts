@@ -12,27 +12,24 @@ const ApiError = require("../exeptions/api.error")
 const mailService = require("./mail.service")
 const tokenService = require("./token.service")
 
-
 class UserService {
     async registration(username, email, password) {
         const candidate = await User.findOne({email})
 
-        if (candidate) {
-            throw ApiError.BadRequest("User is already registered!")
-        } else {
-            const hashPassword = await bcrypt.hash(password, 3)
-            const activationLink = uuid.v4()
+        if (candidate) throw ApiError.BadRequest("User is already registered!")
 
-            const user = await User.create({
-                username,
-                email,
-                password: hashPassword,
-                activationLink
-            })
-            await mailService.sendActivationMail(email, `${process.env.VITE_API_URL}/activate/${activationLink}`)
+        const hashPassword = await bcrypt.hash(password, 3)
+        const activationLink = uuid.v4()
 
-            return await generateAndSaveTokens(user)
-        }
+        const user = await User.create({
+            username,
+            email,
+            password: hashPassword,
+            activationLink
+        })
+        await mailService.sendActivationMail(email, `${process.env.VITE_API_URL}/activate/${activationLink}`)
+
+        return await generateAndSaveTokens(user)
     }
 
 
@@ -121,6 +118,4 @@ class UserService {
     }
 }
 
-module.exports = new UserService()
-
-export {}
+export default UserService

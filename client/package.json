@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/socket.io": "^3.0.2",
     "axios": "^1.4.0",
     "emoji-picker-react": "^4.4.9",
