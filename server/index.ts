@@ -42,8 +42,6 @@ export const io = require("socket.io")(httpServer, {
     }
 })
 
-global.onlineUsers = new Map()
-
 io.on("connection", (client) => {
     console.log(`User with id ${client.id} is connected!`)
     client.on("disconnect", () => {
@@ -57,7 +55,7 @@ io.on("connection", (client) => {
         io.emit('connectNewUser', users)
     })
     client.on('disconnectUser', (data) => {
-        global.onlineUsers = global.onlineUsers((user) => user.id !== data?.id)
+        users = users.filter((user) => user.id !== data?.id)
         io.emit("disconnected", users)
     })
     client.on('startTyping', (data) => {
