@@ -12,22 +12,22 @@ import {useChatStore} from "../../../../store/chat.store";
 import {socket} from "../../../../socket";
 import TypingStatus from "../TypingStatusBlock/TypingStatus";
 import {useUserStore} from "../../../../store/user.store";
+import {useMessageStore} from "../../../../store/message.store"
 
 const SendMessageBlock = () => {
     const {
-        message,
-        setMessage,
         handleSendMessage,
         handleStartTyping,
         handleEndTyping,
         setTypingStatus
     } = useChatStore()
 
-    const [emojiToggle, setEmojiToggle] = useState(false)
-    const [currentEmoji, setCurrentEmoji] = useState("")
+    const [emojiToggle, setEmojiToggle] = useState<boolean>(false)
+    const [currentEmoji, setCurrentEmoji] = useState<string>("")
 
-    const toggleEmojiPicker = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation()
+    const [message, setMessage] = useState<string>("")
+
+    const toggleEmojiPicker = () => {
         setEmojiToggle(!emojiToggle)
     }
 
@@ -37,9 +37,10 @@ const SendMessageBlock = () => {
         setMessage(message + emojiData.emoji)
     }
 
-    const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
+    
 
     useEffect(() => {
         socket.on("responseStartTyping", (data: string) => setTypingStatus(data))
@@ -57,7 +58,7 @@ const SendMessageBlock = () => {
                 <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message}
                        placeholder="Написать..."
                        type="text"
-                       onChange={handleMessage}></Input>
+                       onChange={changeMessage}></Input>
                 <div className={styles.message_box__controls}>
                     <button type="button" className={styles.message_box__emoji_toggler}
                             onClick={toggleEmojiPicker}>{currentEmoji ? currentEmoji : <EmojiIcon/>}

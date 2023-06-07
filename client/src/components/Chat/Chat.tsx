@@ -11,6 +11,7 @@ import SendMessageBlock from "./components/SendMessageBlock/SendMessageBlock";
 import MessagesLogBlock from "./components/MessagesLogBlock/MessagesLogBlock";
 import UserProfileBlock from "./components/UserProfileBlock/UserProfileBlock";
 import ContactsBlock from "./components/ContactsBlock/ContactsBlock";
+import SearchUser from "../SearchUser/SearchUser";
 
 const Chat = () => {
     const {handleConnectNewUser, handleDisconnectUser, handleNewMessage} = useChatStore()
@@ -40,6 +41,7 @@ const Chat = () => {
             <div className={styles.chat}>
                 <div className={styles.chat__aside}>
                     <UserProfileBlock/>
+                    <SearchUser/>
                     <ContactsBlock/>
                 </div>
 

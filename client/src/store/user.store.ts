@@ -41,6 +41,7 @@ export const useUserStore = create<useUserStore>()(
 
             registration: async (username, email, password) => {
                 set({isLoading: true})
+
                 try {
                     const response = await AuthService.registration(username, email, password)
                     console.log(response)
@@ -49,12 +50,14 @@ export const useUserStore = create<useUserStore>()(
                     set({user: response.data.user})
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: error.response?.data?.message, isLoading: true})
+                    set({isError: error.response?.data?.message})
+                    set({isLoading: false})
                 }
             },
 
             login: async (email, password) => {
                 set({isLoading: true})
+
                 try {
                     const response = await AuthService.login(email, password)
                     console.log(response)
@@ -91,9 +94,8 @@ export const useUserStore = create<useUserStore>()(
                     set({user: response.data.user})
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: error.response?.data?.message, isLoading: true})
-                } finally {
-                    set({isLoading: false})
+                    set({isError: error.response?.data?.message})
                 }
             }
+            
         })))

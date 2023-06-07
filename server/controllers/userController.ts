@@ -39,9 +39,8 @@ class UserController {
 
     async findUser(req, res, next) {
         try {
-            const {username} = req.body
+            const username = req.params.username
             const userData = await userService.getOneUser(username)
-
             return res.json(userData)
         } catch (error) {
             next(error)
@@ -76,7 +75,6 @@ class UserController {
             const {refreshToken} = req.cookies
             const userData = await userService.refresh(refreshToken)
             res.cookie("refreshToken", userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-            console.log(userData)
             return res.json(userData)
         } catch (error) {
             next(error)

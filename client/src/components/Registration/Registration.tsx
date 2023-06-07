@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styles from "./styles.module.scss";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 import {useUserStore} from "../../store/user.store";
@@ -8,6 +8,8 @@ import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import Error from "../Error/Error";
 
 const Registration = () => {
+    const navigate = useNavigate()
+
     const [username, setUsername] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -17,6 +19,7 @@ const Registration = () => {
     const registrationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         registration(username, email, password)
+        navigate("/chat")
     }
 
     return (
@@ -65,7 +68,7 @@ const Registration = () => {
                     </div>
                     <Error/>
                     <p><Link to="/login">Registered yet?</Link></p>
-                    {isLoading ? <button>Register</button> : <DotsIcon/>}
+                    {isLoading ? <DotsIcon/> : <button>Register</button>}
                 </form>
             </div>
         </div>

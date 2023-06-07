@@ -16,7 +16,7 @@ const {
     refreshUser
 } = require("../controllers/userController")
 
-router.get('/user', findUser)
+router.get('/user/:username', findUser)
 router.get('/users', authMiddleware, getAllUsers)
 router.get('/activate/:link', activateUser)
 router.get('/refresh', refreshUser)
