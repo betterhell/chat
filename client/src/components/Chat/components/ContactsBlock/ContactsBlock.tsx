@@ -7,7 +7,6 @@ const ContactsBlock = () => {
     const {users} = useChatStore()
 
     return <div className={styles.contacts}>
-        {}
         <ul>
             {users.map((user: User, index) => {
                 return user.username === localStorage.getItem("username")

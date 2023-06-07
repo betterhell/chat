@@ -6,19 +6,20 @@ import SpeakerIcon from "../../../../assets/icons/SpeakerIcon";
 import StatusIcon from "../../../../assets/icons/StatusIcon";
 import NewChatIcon from "../../../../assets/icons/NewChatIcon";
 import SettingsIcon from "../../../../assets/icons/SettingsIcon";
+
 import {TbLogout} from "react-icons/tb";
 
-import {useChatStore} from "../../../../store/chat.store";
 import {useNavigate} from "react-router-dom";
-import {useUserStore} from "../../../../store/user.store";
 import Profile from "../../../Profile/Profile";
+
+import {useUserStore} from "../../../../store/user.store";
+import SearchUser from "../../../SearchUser/SearchUser";
 
 const UserProfileBlock = () => {
     const navigate = useNavigate()
 
     const [profileActive, setProfileActive] = useState<boolean>(false)
 
-    const {handleLeaveUser} = useChatStore()
     const {user, logout} = useUserStore()
 
     const handleLogout = () => {

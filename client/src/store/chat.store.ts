@@ -5,6 +5,7 @@ import {v4 as uuidv4} from "uuid";
 import {User} from "../models/user.model";
 import {Message} from "../models/message.model";
 import {socket} from "../socket";
+import {useUserStore} from "./user.store";
 
 interface chatStoreState {
     user: string,
@@ -86,7 +87,7 @@ export const useChatStore = create<chatStoreState>()(
                 if (e.code === "Backspace" || e.code === "Space") {
                     return
                 }
-                socket.emit('startTyping', `${localStorage.getItem("username")} is typing`)
+                socket.emit('startTyping', `${useUserStore.getState().user.username} is typing`)
             },
 
             handleEndTyping: () => {
