@@ -31,8 +31,6 @@ const SearchUser = () => {
         }
     }
 
-    console.log(searchingUser)
-
     useEffect(() => {
         if (username.length >= 1) {
             fetchUser().then()

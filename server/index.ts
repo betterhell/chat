@@ -50,6 +50,14 @@ io.on("connection", (client) => {
     client.on("message", (data: any) => {
         io.emit("response", data)
     })
+
+    io.of("/").adapter.on("create-room", (room) => {
+        console.log(`room ${room} was created`);
+    });
+
+    io.of("/chat").adapter.on("join-room", (room, id) => {
+        console.log(`socket ${id} has joined room ${room}`);
+    })
     client.on("newUser", (data) => {
         users.push(data)
         io.emit('connectNewUser', users)
@@ -58,6 +66,7 @@ io.on("connection", (client) => {
         users = users.filter((user) => user.id !== data?.id)
         io.emit("disconnected", users)
     })
+
     client.on('startTyping', (data) => {
         io.emit('responseStartTyping', data)
     })

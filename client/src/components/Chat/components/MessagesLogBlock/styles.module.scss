@@ -2,12 +2,10 @@
 
 .messages_log {
   position: relative;
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
   background-color: $main-white;
-  height: calc(100vh - 36px);
   width: 100%;
+  height: calc(100% - 36px);
 
   button {
     height: 59px;
