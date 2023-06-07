@@ -1,0 +1,27 @@
+@import "../../styles/variables";
+
+.profile__info_enabled {
+  padding: 0 10px;
+  background-color: $chat-main-background;
+  position: absolute;
+  top: 59px;
+  left: 0;
+  width: 100%;
+  transition: 0.3s ease-in-out;
+
+  h2 {
+    border-bottom: 1px solid $border-strong;
+  }
+
+  input {
+    padding: 0;
+  }
+}
+
+.profile__info_disabled {
+  transition: 0.3s ease;
+  top: 59px;
+  left: -999px;
+  position: absolute;
+  user-select: none;
+}

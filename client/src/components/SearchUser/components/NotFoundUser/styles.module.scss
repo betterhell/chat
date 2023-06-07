@@ -1,0 +1,13 @@
+@import "../../../../styles/variables";
+
+.NotFoundUser {
+  background-color: $chat-main-background;
+  display: flex;
+  justify-content: space-between;
+  height: 59px;
+  padding: 10px;
+
+  p {
+    color: red
+  }
+}
