@@ -16,6 +16,8 @@ import {useMessageStore} from "../../../../store/message.store"
 
 const SendMessageBlock = () => {
     const {
+        message,
+        setMessage,
         handleSendMessage,
         handleStartTyping,
         handleEndTyping,
@@ -25,7 +27,6 @@ const SendMessageBlock = () => {
     const [emojiToggle, setEmojiToggle] = useState<boolean>(false)
     const [currentEmoji, setCurrentEmoji] = useState<string>("")
 
-    const [message, setMessage] = useState<string>("")
 
     const toggleEmojiPicker = () => {
         setEmojiToggle(!emojiToggle)
@@ -40,7 +41,7 @@ const SendMessageBlock = () => {
     const changeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
-    
+
 
     useEffect(() => {
         socket.on("responseStartTyping", (data: string) => setTypingStatus(data))

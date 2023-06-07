@@ -53,7 +53,7 @@ export const useChatStore = create<chatStoreState>()(
             handleSendMessage: (e: React.ChangeEvent<HTMLFormElement>) => {
                 e.preventDefault()
 
-                if (get().message.trim() && localStorage.getItem("username")) {
+                if (get().message.trim() && useUserStore.getState().user.username) {
                     socket.emit("message", {
                         id: uuidv4(),
                         username: localStorage.getItem("username"),
@@ -71,7 +71,7 @@ export const useChatStore = create<chatStoreState>()(
 
             // users funcs
             handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                set({user: e.target.value})
+                set({user: useUserStore.getState().user.username})
             },
 
             handleUserSubmit: () => {

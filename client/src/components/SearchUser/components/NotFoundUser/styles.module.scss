@@ -4,10 +4,12 @@
   background-color: $chat-main-background;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 59px;
   padding: 10px;
 
   p {
-    color: red
+    color: $primary-text;
+    font-size: 16px;
   }
 }
