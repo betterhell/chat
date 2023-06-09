@@ -15,7 +15,6 @@ const tokenService = require("./token.service")
 class UserService {
     async registration(username, email, password) {
         const candidate = await User.findOne({email})
-
         if (candidate) throw ApiError.BadRequest("User is already registered!")
 
         const hashPassword = await bcrypt.hash(password, 3)

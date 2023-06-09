@@ -8,25 +8,32 @@ import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 import {RiMailSendLine as SendMessageIcon} from "react-icons/ri"
 import {BsEmojiSmile as EmojiIcon} from "react-icons/bs"
 
-import {useChatStore} from "../../../../store/chat.store";
 import {socket} from "../../../../socket";
 import TypingStatus from "../TypingStatusBlock/TypingStatus";
 import {useUserStore} from "../../../../store/user.store";
 import {useMessageStore} from "../../../../store/message.store"
 
+
 const SendMessageBlock = () => {
-    const {
-        message,
-        setMessage,
-        handleSendMessage,
-        handleStartTyping,
-        handleEndTyping,
-        setTypingStatus
-    } = useChatStore()
+    const {message, setMessage, createMessage} = useMessageStore()
 
     const [emojiToggle, setEmojiToggle] = useState<boolean>(false)
     const [currentEmoji, setCurrentEmoji] = useState<string>("")
+    const [typingStatus, setTypingStatus] = useState<string | "">("")
 
+
+    const changeTypingStatus = (data: string) => {
+        setTypingStatus(data)
+    }
+
+    const changeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMessage(e.target.value)
+    }
+
+    const handleMessage = (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        createMessage(message)
+    }
 
     const toggleEmojiPicker = () => {
         setEmojiToggle(!emojiToggle)
@@ -38,23 +45,31 @@ const SendMessageBlock = () => {
         setMessage(message + emojiData.emoji)
     }
 
-    const changeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMessage(e.target.value)
+    const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.code === "Backspace" || e.code === "Space") {
+            return
+        }
+        socket.emit('startTyping', `${useUserStore.getState().user.username} is typing`)
     }
 
+    const handleEndTyping = () => {
+        setTimeout(() => {
+            socket.emit('endTyping', null)
+        }, 1000)
+    }
 
     useEffect(() => {
-        socket.on("responseStartTyping", (data: string) => setTypingStatus(data))
+        socket.on("responseStartTyping", (data: string) => changeTypingStatus(data))
     }, [socket])
 
     useEffect(() => {
-        socket.on("responseEndTyping", (data: string) => setTypingStatus(data))
+        socket.on("responseEndTyping", (data: string) => changeTypingStatus(data))
     }, [socket])
 
     return (
         <>
-            <form onSubmit={handleSendMessage} className={styles.message_box}>
-                <TypingStatus/>
+            <form onSubmit={handleMessage} className={styles.message_box}>
+                <TypingStatus status={typingStatus}/>
 
                 <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message}
                        placeholder="Написать..."

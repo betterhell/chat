@@ -2,14 +2,19 @@ import React from 'react';
 import styles from "./styles.module.scss";
 
 import DotsIcon from "../../../../assets/icons/DotsIcon/DotsIcon";
-import {useChatStore} from "../../../../store/chat.store";
 
-const TypingStatus = () => {
-    const {typingStatus} = useChatStore()
+interface TypingStatusProps {
+    status: string,
+}
 
-    return <div className={styles.typingStatus}>
-        {typingStatus && <p>{typingStatus} <DotsIcon/></p>}
-    </div>
+const TypingStatus: React.FC<TypingStatusProps> = ({status}) => {
+
+    return (
+        <div className={styles.typingStatus}>
+            {status && <p>{status} <DotsIcon/></p>}
+        </div>
+
+    )
 };
 
 export default TypingStatus;

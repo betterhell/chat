@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser")
 const httpServer = require("http").Server(app)
 const errorMiddleware = require("./middlewares/error.middleware")
 const userRouter = require("./routes/user.routes")
+const messageRoute = require("./routes/message.routes")
 
 export let users = []
 
@@ -21,6 +22,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(userRouter)
+app.use(messageRoute)
 app.use(errorMiddleware)
 
 mongoose
@@ -51,13 +53,13 @@ io.on("connection", (client) => {
         io.emit("response", data)
     })
 
-    io.of("/").adapter.on("create-room", (room) => {
-        console.log(`room ${room} was created`);
-    });
-
-    io.of("/chat").adapter.on("join-room", (room, id) => {
-        console.log(`socket ${id} has joined room ${room}`);
-    })
+    // io.of("/").adapter.on("create-room", (room) => {
+    //     console.log(`room ${room} was created`);
+    // });
+    //
+    // io.of("/chat").adapter.on("join-room", (room, id) => {
+    //     console.log(`socket ${id} has joined room ${room}`);
+    // })
     client.on("newUser", (data) => {
         users.push(data)
         io.emit('connectNewUser', users)
