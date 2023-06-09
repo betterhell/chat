@@ -5,6 +5,7 @@ import {Message} from "../../../../models/message.model";
 import MessageBlock from "../MessageBlock/MessageBlock";
 import {useChatStore} from "../../../../store/chat.store";
 import {useUserStore} from "../../../../store/user.store";
+import ChatImage from "../../../../assets/images/ChatImage";
 
 const MessagesLogBlock = () => {
     const {messages} = useChatStore()
@@ -13,14 +14,14 @@ const MessagesLogBlock = () => {
     return (
         <div className={styles.messages_log}>
             {messages.map((message: Message) => {
-                return user.username
+                return message.username === user.username
                     ? (<MessageBlock key={message.id}
-                                     text={message.text}
+                                     text={message.message}
                                      view="user"
                                      timestamp={message.timestamp}
                     />)
                     : (<MessageBlock key={message.id}
-                                     text={message.text}
+                                     text={message.message}
                                      view="!user"
                                      username={message.username}
                                      timestamp={message.timestamp}

@@ -9,7 +9,7 @@ import {useUserStore} from "./user.store";
 
 interface chatStoreState {
     user: string,
-    users: User[]
+    users: {}
     message: string
     setMessage: (message: string) => void
     currentEmoji: string
@@ -56,7 +56,7 @@ export const useChatStore = create<chatStoreState>()(
                 if (get().message.trim() && useUserStore.getState().user.username) {
                     socket.emit("message", {
                         id: uuidv4(),
-                        username: localStorage.getItem("username"),
+                        username: useUserStore.getState().user.username,
                         text: get().message,
                         timestamp: new Date().toLocaleTimeString("ru-RU", {timeStyle: "short"})
                     })
@@ -75,10 +75,8 @@ export const useChatStore = create<chatStoreState>()(
             },
 
             handleUserSubmit: () => {
-                localStorage.setItem("username", get().user)
-
                 socket.emit('newUser', {
-                    username: get().user,
+                    username: useUserStore.getState().user.username,
                     id: uuidv4(),
                 })
             },
@@ -97,7 +95,6 @@ export const useChatStore = create<chatStoreState>()(
             },
 
             handleConnectNewUser: (data) => {
-                // @ts-ignore
                 set({users: data})
             },
 
@@ -107,6 +104,7 @@ export const useChatStore = create<chatStoreState>()(
             },
 
             handleLeaveUser: () => {
+                // @ts-ignore
                 const leavingUser = get().users.find((user: User) => user.id)
                 localStorage.removeItem("username")
                 socket.emit('disconnectUser', leavingUser)

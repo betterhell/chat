@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import styles from "./styles.module.scss";
 import {v4 as uuidv4} from "uuid";
-import {useChatStore} from "../../../../store/chat.store";
+import {useUserStore} from "../../../../store/user.store";
 
 interface UserMessageBlockProps {
     view: string
@@ -11,8 +11,6 @@ interface UserMessageBlockProps {
 }
 
 const MessageBlock: React.FC<UserMessageBlockProps> = ({view, username, text, timestamp}) => {
-    const {user} = useChatStore()
-
     const messageRef = useRef<null | HTMLDivElement>(null);
     useEffect(() => {
         if (messageRef.current) {
@@ -27,7 +25,7 @@ const MessageBlock: React.FC<UserMessageBlockProps> = ({view, username, text, ti
 
     return (
         <>
-            {view === user ?
+            {view === "user" ?
                 <div ref={messageRef} key={uuidv4()}
                      className={styles.user_message}>
                     <p>{text}</p>
