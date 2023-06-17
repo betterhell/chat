@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "./styles.module.scss"
 
 import {User} from "../../models/user.model";
@@ -12,9 +12,12 @@ import MessagesLogBlock from "./components/MessagesLogBlock/MessagesLogBlock";
 import UserProfileBlock from "./components/UserProfileBlock/UserProfileBlock";
 import ContactsBlock from "./components/ContactsBlock/ContactsBlock";
 import SearchUser from "../SearchUser/SearchUser";
+import EmptyChatBlock from "./components/EmptyChatBlock/EmptyChatBlock";
+import {useUserStore} from "../../store/user.store";
 
 const Chat = () => {
     const {handleConnectNewUser, handleDisconnectUser, handleNewMessage} = useChatStore()
+    const {foundUser} = useUserStore()
 
     useEffect(() => {
         socket.on("connectNewUser", (data: User) => {
@@ -44,6 +47,7 @@ const Chat = () => {
                     <SearchUser/>
                     <ContactsBlock/>
                 </div>
+
 
                 <div className={styles.chat__main}>
                     <MessagesLogBlock/>

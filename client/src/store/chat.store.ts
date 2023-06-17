@@ -8,7 +8,7 @@ import {socket} from "../socket";
 import {useUserStore} from "./user.store";
 
 interface chatStoreState {
-    user: string,
+    user: string | null
     users: {}
     message: string
     setMessage: (message: string) => void

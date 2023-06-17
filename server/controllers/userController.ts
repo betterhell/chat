@@ -1,4 +1,5 @@
 import UserService from "../service/user.service";
+import {users} from "../index";
 
 const userService = new UserService()
 const {validationResult} = require("express-validator")
@@ -116,6 +117,18 @@ class UserController {
     async getAllUsers(req, res, next) {
         try {
             const userData = await userService.users()
+
+            return res.json(userData)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async addToFriends(req, res, next) {
+        try {
+            const updateFriends = req.body
+            const username = req.params.username
+            const userData = await userService.toFriend(username, updateFriends)
 
             return res.json(userData)
         } catch (error) {

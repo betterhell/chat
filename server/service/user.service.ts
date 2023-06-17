@@ -115,6 +115,11 @@ class UserService {
 
         return users
     }
+
+    async toFriend(username, updateFriends) {
+
+    }
+
 }
 
 export default UserService

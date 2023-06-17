@@ -6,9 +6,12 @@ import AuthService from "../services/AuthService";
 import {User} from "../models/user.model";
 import {AuthResponse} from "../models/response/authResponse";
 import {API_URL} from "../http";
+import UserService from "../services/UserService";
+import foundUser from "../components/SearchUser/components/FoundUser/FoundUser";
 
 interface useUserStore {
     user: User
+    foundUser: User
     isAuth: boolean
     isLoading: boolean
     isError: string,
@@ -16,6 +19,8 @@ interface useUserStore {
     login: (email: string, password: string) => void
     logout: () => void
     checkAuth: () => void
+    findUser: (username: string) => void
+    addToFriends: (username: string) => void
 }
 
 
@@ -23,6 +28,19 @@ export const useUserStore = create<useUserStore>()(
     devtools(
         (set, get) => ({
             user: {
+                id: "",
+                username: "",
+                password: "",
+                activationLink: "",
+                email: "",
+                isActivatedEmail: false,
+                birtDate: {
+                    day: "",
+                    month: "",
+                    year: "",
+                }
+            },
+            foundUser: {
                 id: "",
                 username: "",
                 password: "",
@@ -96,6 +114,27 @@ export const useUserStore = create<useUserStore>()(
                 } catch (error: any) {
                     set({isError: error.response?.data?.message})
                 }
+            },
+
+            findUser: async (username) => {
+                set({foundUser: {} as User})
+                try {
+                    const {data} = await UserService.fetchUser(username)
+                    console.log(data)
+                    set({foundUser: data})
+                    set({isLoading: false})
+                } catch (error: any) {
+                    set({isError: "User does not exist", isLoading: false})
+                }
+            },
+
+            addToFriends: async (username) => {
+                try {
+                    const {data} = await UserService.addToFriend(username)
+                    console.log(data)
+                    set({isLoading: false})
+                } catch (error: any) {
+                    set({isError: "User does not exist", isLoading: false})
+                }
             }
-            
         })))

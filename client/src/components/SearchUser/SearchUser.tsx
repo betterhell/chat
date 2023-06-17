@@ -10,31 +10,23 @@ import {User} from "../../models/user.model";
 import FoundUser from "./components/FoundUser/FoundUser";
 import NotFoundUser from "./components/NotFoundUser/NotFoundUser";
 import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
+import {useUserStore} from "../../store/user.store";
+
 
 const SearchUser = () => {
     const [username, setUsername] = useState<string>("")
-    const [searchingUser, setSearchingUser] = useState<User | null>(null)
-    const [isError, setIsError] = useState("")
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const fetchUser = async () => {
-        setSearchingUser(null)
-        setIsLoading(false)
-        try {
-            const {data} = await UserService.fetchUser(username.trim())
-            setSearchingUser(data)
-            setIsLoading(true)
-        } catch (error) {
-            setIsError("User not found")
-        } finally {
-            setIsLoading(true)
-        }
-    }
+    const {user, foundUser, findUser, isError} = useUserStore()
 
     useEffect(() => {
-        if (username.length >= 1) {
-            fetchUser().then()
-        }
+        setIsLoading(false)
+        setTimeout(() => {
+            if (username.length >= 1) {
+                findUser(username)
+            }
+        }, 1000)
+        setIsLoading(true)
     }, [username])
 
     return (
@@ -48,8 +40,8 @@ const SearchUser = () => {
             <div>
                 {isLoading
                     ? <>
-                        {searchingUser
-                            ? <FoundUser user={searchingUser}/>
+                        {foundUser?.username && foundUser.username !== user?.username
+                            ? <FoundUser user={foundUser}/>
                             : <NotFoundUser username={username} error={isError}/>
                         }
                     </>
