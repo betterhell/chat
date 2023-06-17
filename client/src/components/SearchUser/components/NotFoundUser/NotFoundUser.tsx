@@ -9,10 +9,9 @@ interface NotFoundUserProps {
 const NotFoundUser: React.FC<NotFoundUserProps> = ({username, error}) => {
     return (
         <>
-            {(error && username.length >= 1) ? <div className={styles.NotFoundUser}>
-                    <p>{error} :(</p>
-                </div>
-                : null
+            {(error && username.length >= 1) && <div className={styles.NotFoundUser}>
+                <p>{error} :(</p>
+            </div>
             }
         </>
     );

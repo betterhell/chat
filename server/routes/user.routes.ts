@@ -13,10 +13,12 @@ const {
     updateUser,
     logoutUser,
     activateUser,
-    refreshUser
+    refreshUser,
+    addToFriends,
 } = require("../controllers/userController")
 
-router.get('/user/:username', findUser)
+router.patch('/user/:username', addToFriends)
+router.post('/user/:username', findUser)
 router.get('/users', authMiddleware, getAllUsers)
 router.get('/activate/:link', activateUser)
 router.get('/refresh', refreshUser)

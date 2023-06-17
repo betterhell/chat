@@ -5,7 +5,6 @@ import {Message} from "../../../../models/message.model";
 import MessageBlock from "../MessageBlock/MessageBlock";
 import {useChatStore} from "../../../../store/chat.store";
 import {useUserStore} from "../../../../store/user.store";
-import ChatImage from "../../../../assets/images/ChatImage";
 
 const MessagesLogBlock = () => {
     const {messages} = useChatStore()
@@ -28,16 +27,6 @@ const MessagesLogBlock = () => {
                         />
                     )
             })}
-            {/*    :*/}
-            {/*    (<div className={styles.chat__textfield__emptyChat}>*/}
-            {/*        <ChatImage/>*/}
-            {/*        <div className={styles.chat__textfield__emptyChat_info}>*/}
-            {/*            <h1>WhatsApp Web</h1>*/}
-            {/*            <p>Отправляйте и получайте сообщения без необходимости оставлять телефон подключённым.</p>*/}
-            {/*            <p>Используйте WhatsApp одновременно на четырёх связанных устройствах и одном телефоне.</p>*/}
-            {/*        </div>*/}
-            {/*    </div>)*/}
-            {/*}*/}
         </div>
     )
 }

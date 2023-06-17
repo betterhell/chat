@@ -8,6 +8,10 @@ export default class UserService {
     }
 
     static async fetchUser(username: string): Promise<AxiosResponse<User>> {
-        return $api.get<User>(`/user/${username}`)
+        return $api.post<User>(`/user/${username}`)
+    }
+
+    static async addToFriend(username: string): Promise<AxiosResponse<User>> {
+        return $api.patch<User>(`/user/${username}`)
     }
 }

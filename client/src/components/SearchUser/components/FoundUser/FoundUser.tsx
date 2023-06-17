@@ -7,7 +7,7 @@ import ProfileIcon from "../../../../assets/icons/ProfileIcon";
 import {BsPersonFillAdd} from "react-icons/bs"
 
 interface FoundUserProps {
-    user: User | null
+    user: User
 }
 
 const FoundUser: React.FC<FoundUserProps> = ({user}) => {
