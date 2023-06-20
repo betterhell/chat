@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "./styles.module.scss"
 
 import {Link, useNavigate} from "react-router-dom";
 import {useUserStore} from "../../store/user.store";
+import Loader from "../../assets/icons/Loader";
+import Error from "../Error/Error";
 
 const Login = () => {
     const navigate = useNavigate()
@@ -10,12 +12,24 @@ const Login = () => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
-    const {login} = useUserStore()
+    const {login, isError, isLoading, isAuth} = useUserStore()
 
-    const loginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        if (isAuth) {
+            navigate("/chat")
+        }
+    })
+
+    if (isLoading) {
+        return <div className="loading_screen">
+            <Loader width="200" height="200" color="white"/>
+        </div>
+    }
+
+    const loginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        login(email, password)
-        navigate("/chat")
+        await login(email, password)
+        isAuth && navigate("/chat")
     }
 
     return (
@@ -47,6 +61,7 @@ const Login = () => {
                                placeholder="Enter your password"
                                type="text"/>
                     </div>
+                    <Error/>
                     <p><Link to="/registration">Not registered yet?</Link></p>
                     <button>Войти</button>
                 </form>

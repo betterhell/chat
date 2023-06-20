@@ -1,4 +1,4 @@
-module.exports = class ApoError extends Error {
+module.exports = class ApiError extends Error {
     status;
     errors;
 
@@ -10,10 +10,10 @@ module.exports = class ApoError extends Error {
     }
 
     static Unauthorized() {
-        return new ApoError(401, "User not authorized")
+        return new ApiError(401, "User not authorized")
     }
 
     static BadRequest(message, errors) {
-        return new ApoError(400, message, errors)
+        return new ApiError(400, message, errors)
     }
 }

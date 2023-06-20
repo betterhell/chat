@@ -6,10 +6,10 @@ import Login from "./components/Login/Login";
 import Chat from "./components/Chat/Chat";
 import Main from "./components/Main/Main";
 import Registration from "./components/Registration/Registration";
-import Loader from "./assets/icons/Loader/Loader";
 
 import {useUserStore} from "./store/user.store";
-
+import PrivateRoute from "./routes/PrivateRoute/PrivateRoute";
+import Loader from "./assets/icons/Loader";
 
 const App = () => {
     const {checkAuth, isAuth, isLoading} = useUserStore()
@@ -20,9 +20,6 @@ const App = () => {
         }
     }, [])
 
-    if (isLoading) {
-        return <Loader/>
-    }
 
     return (
         <div className="App">
@@ -30,7 +27,9 @@ const App = () => {
                 <Route path="/" element={<Main/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/registration" element={<Registration/>}/>
-                {isAuth ? <Route path="/chat" element={<Chat/>}/> : <Route path="/login" element={<Login/>}/>}
+                <Route element={<PrivateRoute isAuth={isAuth}/>}>
+                    <Route path="/chat" element={<Chat/>}/>
+                </Route>
             </Routes>
         </div>
     )
