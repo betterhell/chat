@@ -48,7 +48,6 @@ const Chat = () => {
                     <ContactsBlock/>
                 </div>
 
-
                 <div className={styles.chat__main}>
                     <MessagesLogBlock/>
                     <SendMessageBlock/>

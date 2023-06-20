@@ -7,10 +7,9 @@ import {User} from "../models/user.model";
 import {AuthResponse} from "../models/response/authResponse";
 import {API_URL} from "../http";
 import UserService from "../services/UserService";
-import foundUser from "../components/SearchUser/components/FoundUser/FoundUser";
 
 interface useUserStore {
-    user: User
+    user: User | null
     foundUser: User
     isAuth: boolean
     isLoading: boolean
@@ -68,26 +67,24 @@ export const useUserStore = create<useUserStore>()(
                     set({user: response.data.user})
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: error.response?.data?.message})
+                    set({isError: "User already exist or incorrect credentials"})
                     set({isLoading: false})
                 }
             },
 
             login: async (email, password) => {
                 set({isLoading: true})
-
                 try {
                     const response = await AuthService.login(email, password)
-                    console.log(response)
                     localStorage.setItem("token", response.data.accessToken)
-                    set({isAuth: true})
                     set({user: response.data.user})
                     set({isLoading: false})
+                    set({isAuth: true})
                 } catch (error: any) {
-                    set({isError: error.response?.data?.message, isLoading: true})
+                    set({isError: "User does not exist!"})
+                    set({isLoading: false})
                 }
             },
-
 
             logout: async () => {
                 set({isLoading: true})
@@ -97,8 +94,9 @@ export const useUserStore = create<useUserStore>()(
                     set({isAuth: false})
                     set({user: {} as User})
                     set({isLoading: false})
+
                 } catch (error: any) {
-                    set({isError: error.response?.data?.message, isLoading: true})
+                    set({isError: error.response?.data?.message, isLoading: false})
                 }
             },
 
@@ -111,12 +109,14 @@ export const useUserStore = create<useUserStore>()(
                     set({isAuth: true})
                     set({user: response.data.user})
                     set({isLoading: false})
+
                 } catch (error: any) {
                     set({isError: error.response?.data?.message})
                 }
             },
 
             findUser: async (username) => {
+                set({isLoading: true})
                 set({foundUser: {} as User})
                 try {
                     const {data} = await UserService.fetchUser(username)
@@ -124,7 +124,7 @@ export const useUserStore = create<useUserStore>()(
                     set({foundUser: data})
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: "User does not exist", isLoading: false})
+                    set({isError: "User does not exist!", isLoading: false})
                 }
             },
 
@@ -134,7 +134,7 @@ export const useUserStore = create<useUserStore>()(
                     console.log(data)
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: "User does not exist", isLoading: false})
+                    set({isError: "User does not exist!", isLoading: false})
                 }
             }
         })))

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "./styles.module.scss";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import axios from "axios";
 import {useUserStore} from "../../store/user.store";
 import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import Error from "../Error/Error";
+import Loader from "../../assets/icons/Loader";
 
 const Registration = () => {
     const navigate = useNavigate()
@@ -14,12 +15,24 @@ const Registration = () => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
-    const {registration, isLoading, isError} = useUserStore()
+    const {registration, isLoading, isError, isAuth} = useUserStore()
 
-    const registrationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        if (isAuth) {
+            navigate("/chat")
+        }
+    })
+
+    if (isLoading) {
+        return <div className="loading_screen">
+            <Loader width="200" height="200" color="white"/>
+        </div>
+    }
+
+    const registrationSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        registration(username, email, password)
-        navigate("/chat")
+        await registration(username, email, password)
+        isAuth && navigate("/chat")
     }
 
     return (
@@ -68,7 +81,7 @@ const Registration = () => {
                     </div>
                     <Error/>
                     <p><Link to="/login">Registered yet?</Link></p>
-                    {isLoading ? <DotsIcon/> : <button>Register</button>}
+                    <button>Register</button>
                 </form>
             </div>
         </div>

@@ -34,7 +34,7 @@ const UserProfileBlock = () => {
     return <div className={styles.user_profile}>
         <div className={styles.user_profile__info}>
             <button onClick={toggleProfile}><ProfileIcon/></button>
-            <h3>{user.username}</h3>
+            <h3>{user?.username}</h3>
         </div>
         <div className={styles.user_profile__actions}>
             <button><SpeakerIcon/></button>
