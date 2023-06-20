@@ -9,17 +9,15 @@ import Registration from "./components/Registration/Registration";
 
 import {useUserStore} from "./store/user.store";
 import PrivateRoute from "./routes/PrivateRoute/PrivateRoute";
-import Loader from "./assets/icons/Loader";
 
 const App = () => {
-    const {checkAuth, isAuth, isLoading} = useUserStore()
+    const {checkAuth, isAuth} = useUserStore()
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
             checkAuth()
         }
     }, [])
-
 
     return (
         <div className="App">

@@ -1,6 +1,5 @@
 import {create} from "zustand";
 import {devtools} from "zustand/middleware";
-import React from "react";
 import axios from "axios";
 import AuthService from "../services/AuthService";
 import {User} from "../models/user.model";
@@ -21,7 +20,6 @@ interface useUserStore {
     findUser: (username: string) => void
     addToFriends: (username: string) => void
 }
-
 
 export const useUserStore = create<useUserStore>()(
     devtools(
