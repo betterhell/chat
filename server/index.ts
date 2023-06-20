@@ -44,6 +44,7 @@ export const io = require("socket.io")(httpServer, {
     }
 })
 
+
 io.on("connection", (client) => {
     console.log(`User with id ${client.id} is connected!`)
     client.on("disconnect", () => {
@@ -52,7 +53,7 @@ io.on("connection", (client) => {
     client.on("message", (data: any) => {
         io.emit("response", data)
     })
-
+    
     // io.of("/").adapter.on("create-room", (room) => {
     //     console.log(`room ${room} was created`);
     // });
