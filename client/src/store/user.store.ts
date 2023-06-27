@@ -6,10 +6,12 @@ import {User} from "../models/user.model";
 import {AuthResponse} from "../models/response/authResponse";
 import {API_URL} from "../http";
 import UserService from "../services/UserService";
+import {socket} from "../socket";
 
 interface useUserStore {
+    users: User[] | []
     user: User | null
-    foundUser: User
+    foundUser: User | null
     isAuth: boolean
     isLoading: boolean
     isError: string,
@@ -24,32 +26,9 @@ interface useUserStore {
 export const useUserStore = create<useUserStore>()(
     devtools(
         (set, get) => ({
-            user: {
-                id: "",
-                username: "",
-                password: "",
-                activationLink: "",
-                email: "",
-                isActivatedEmail: false,
-                birtDate: {
-                    day: "",
-                    month: "",
-                    year: "",
-                }
-            },
-            foundUser: {
-                id: "",
-                username: "",
-                password: "",
-                activationLink: "",
-                email: "",
-                isActivatedEmail: false,
-                birtDate: {
-                    day: "",
-                    month: "",
-                    year: "",
-                }
-            },
+            users: [],
+            user: null,
+            foundUser: null,
             isAuth: false,
             isLoading: false,
             isError: "",
@@ -63,6 +42,7 @@ export const useUserStore = create<useUserStore>()(
                     localStorage.setItem("token", response.data.accessToken)
                     set({isAuth: true})
                     set({user: response.data.user})
+                    socket.emit("user:connectMessage", response.data.user.username)
                     set({isLoading: false})
                 } catch (error: any) {
                     set({isError: "User already exist or incorrect credentials"})
@@ -78,6 +58,8 @@ export const useUserStore = create<useUserStore>()(
                     set({user: response.data.user})
                     set({isLoading: false})
                     set({isAuth: true})
+                    socket.emit("user:connectMessage", response.data.user.username)
+                    socket.emit("user:connect", response.data.user)
                 } catch (error: any) {
                     set({isError: "User does not exist!"})
                     set({isLoading: false})
@@ -90,9 +72,10 @@ export const useUserStore = create<useUserStore>()(
                     const response = await AuthService.logout()
                     localStorage.removeItem("token")
                     set({isAuth: false})
-                    set({user: {} as User})
                     set({isLoading: false})
-
+                    socket.emit("user:disconnectMessage", get().user?.username)
+                    socket.emit("user:disconnect", get().user)
+                    set({user: null})
                 } catch (error: any) {
                     set({isError: error.response?.data?.message, isLoading: false})
                 }
@@ -102,7 +85,6 @@ export const useUserStore = create<useUserStore>()(
                 set({isLoading: true})
                 try {
                     const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true})
-                    console.log(response)
                     localStorage.setItem("token", response.data.accessToken)
                     set({isAuth: true})
                     set({user: response.data.user})
@@ -118,13 +100,13 @@ export const useUserStore = create<useUserStore>()(
                 set({foundUser: {} as User})
                 try {
                     const {data} = await UserService.fetchUser(username)
-                    console.log(data)
                     set({foundUser: data})
                     set({isLoading: false})
                 } catch (error: any) {
                     set({isError: "User does not exist!", isLoading: false})
                 }
             },
+
 
             addToFriends: async (username) => {
                 try {

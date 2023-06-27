@@ -1,6 +1,7 @@
 @import "../../../../styles/variables";
 
 .foundUser {
+  cursor: pointer;
   background-color: $border-strong;
   display: flex;
   justify-content: space-between;

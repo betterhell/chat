@@ -7,12 +7,13 @@ import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 
 import {RiMailSendLine as SendMessageIcon} from "react-icons/ri"
 import {BsEmojiSmile as EmojiIcon} from "react-icons/bs"
+import {useReactMediaRecorder} from "react-media-recorder";
 
 import {socket} from "../../../../socket";
 import TypingStatus from "../TypingStatusBlock/TypingStatus";
 import {useUserStore} from "../../../../store/user.store";
 import {useMessageStore} from "../../../../store/message.store"
-
+import {User} from "../../../../models/user.model";
 
 const SendMessageBlock = () => {
     const {message, setMessage, createMessage} = useMessageStore()
@@ -21,6 +22,7 @@ const SendMessageBlock = () => {
     const [currentEmoji, setCurrentEmoji] = useState<string>("")
     const [typingStatus, setTypingStatus] = useState<string | "">("")
 
+    let timeOutTyping: any = null
 
     const changeTypingStatus = (data: string) => {
         setTypingStatus(data)
@@ -42,28 +44,29 @@ const SendMessageBlock = () => {
     const onEmojiClick = (emojiData: EmojiClickData, e: MouseEvent) => {
         e.stopPropagation()
         setCurrentEmoji(emojiData.emoji)
-        setMessage(message + emojiData.emoji)
+        setMessage(message.text + emojiData.emoji)
     }
 
     const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        clearTimeout(timeOutTyping)
         if (e.code === "Backspace" || e.code === "Space") {
             return
         }
-        socket.emit('startTyping', `${useUserStore.getState().user.username} is typing`)
+        socket.emit('message:startTyping', `${useUserStore.getState().user?.username} is typing`)
     }
 
     const handleEndTyping = () => {
-        setTimeout(() => {
-            socket.emit('endTyping', null)
+        timeOutTyping = setTimeout(() => {
+            socket.emit('message:endTyping', null)
         }, 1000)
     }
 
     useEffect(() => {
-        socket.on("responseStartTyping", (data: string) => changeTypingStatus(data))
+        socket.on("message:responseStartTyping", (data: string) => changeTypingStatus(data))
     }, [socket])
 
     useEffect(() => {
-        socket.on("responseEndTyping", (data: string) => changeTypingStatus(data))
+        socket.on("message:responseEndTyping", (data: string) => changeTypingStatus(data))
     }, [socket])
 
     return (
@@ -71,10 +74,10 @@ const SendMessageBlock = () => {
             <form onSubmit={handleMessage} className={styles.message_box}>
                 <TypingStatus status={typingStatus}/>
 
-                <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message}
+                <Input onKeyup={handleEndTyping} onKeydown={handleStartTyping} value={message?.text}
                        placeholder="Написать..."
                        type="text"
-                       onChange={changeMessage}></Input>
+                       onChange={changeMessage}/>
                 <div className={styles.message_box__controls}>
                     <button type="button" className={styles.message_box__emoji_toggler}
                             onClick={toggleEmojiPicker}>{currentEmoji ? currentEmoji : <EmojiIcon/>}

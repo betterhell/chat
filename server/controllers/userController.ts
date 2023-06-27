@@ -1,5 +1,4 @@
 import UserService from "../service/user.service";
-import {users} from "../index";
 
 const userService = new UserService()
 const {validationResult} = require("express-validator")
