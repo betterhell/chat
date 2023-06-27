@@ -8,12 +8,13 @@ import {BsPersonFillAdd} from "react-icons/bs"
 
 interface FoundUserProps {
     user: User
+    toggleChat: () => void
 }
 
-const FoundUser: React.FC<FoundUserProps> = ({user}) => {
+const FoundUser: React.FC<FoundUserProps> = ({user, toggleChat}) => {
 
     return (
-        <div className={styles.foundUser}>
+        <div onClick={toggleChat} className={styles.foundUser}>
             <div className={styles.foundUser__main}>
                 <div className={styles.foundUser__main__avatar}><ProfileIcon/></div>
                 <div className={styles.foundUser__main__info}>

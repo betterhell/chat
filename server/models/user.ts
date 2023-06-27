@@ -27,7 +27,8 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    friends: [],
+    isOnline: {type: Boolean, default: false},
+    friends: {type: []},
     isActivatedMail: {type: Boolean, default: false},
     activationLink: {type: String}
 }, {

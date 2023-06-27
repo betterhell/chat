@@ -10,7 +10,6 @@ const errorMiddleware = require("./middlewares/error.middleware")
 const userRouter = require("./routes/user.routes")
 const messageRoute = require("./routes/message.routes")
 
-export let users = []
 
 const corsOptions = {
     origin: process.env.VITE_CLIENT_URL,
@@ -37,45 +36,46 @@ httpServer.listen(port, (err) => {
 })
 
 //socket.io connection
-export const io = require("socket.io")(httpServer, {
+const io = require("socket.io")(httpServer, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
 })
 
+const rooms = new Map()
 
-io.on("connection", (client) => {
-    console.log(`User with id ${client.id} is connected!`)
-    client.on("disconnect", () => {
-        console.log(`User with id ${client.id} is disconnected!`)
-    })
-    client.on("message", (data: any) => {
-        io.emit("response", data)
-    })
-    
-    // io.of("/").adapter.on("create-room", (room) => {
-    //     console.log(`room ${room} was created`);
-    // });
-    //
-    // io.of("/chat").adapter.on("join-room", (room, id) => {
-    //     console.log(`socket ${id} has joined room ${room}`);
-    // })
-    client.on("newUser", (data) => {
-        users.push(data)
-        io.emit('connectNewUser', users)
-    })
-    client.on('disconnectUser', (data) => {
-        users = users.filter((user) => user.id !== data?.id)
-        io.emit("disconnected", users)
+io.on("connection", (socket) => {
+    console.log(`User with id ${socket.id} is connected!`)
+
+    socket.on("user:connectMessage", (username: string) => {
+        socket.broadcast.emit("user:responseConnectMessage", `User ${username} has joined the chat!`)
     })
 
-    client.on('startTyping', (data) => {
-        io.emit('responseStartTyping', data)
+    socket.on("user:disconnectMessage", (username: string) => {
+        socket.broadcast.emit("user:responseDisconnectMessage", `User ${username} has left the chat!`)
     })
-    client.on('endTyping', (data) => {
-        io.emit('responseEndTyping', data)
+
+    socket.on("user:connect", (user: any) => {
+        io.emit("user:responseConnect", user)
+    })
+
+    socket.on('user:disconnect', (user: any) => {
+        io.emit("user:responseDisconnect", user)
+    })
+
+    socket.on("message:createMessage", (data: any) => {
+        io.emit("message:responseMessage", data)
+    })
+
+    socket.on('message:startTyping', (data: any) => {
+        io.emit('message:responseStartTyping', data)
+    })
+    socket.on('message:endTyping', (data: any) => {
+        io.emit('message:responseEndTyping', data)
     })
 })
+
+
 
 

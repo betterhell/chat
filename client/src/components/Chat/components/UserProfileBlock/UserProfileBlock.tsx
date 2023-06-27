@@ -14,6 +14,7 @@ import Profile from "../../../Profile/Profile";
 
 import {useUserStore} from "../../../../store/user.store";
 import SearchUser from "../../../SearchUser/SearchUser";
+import {socket} from "../../../../socket";
 
 const UserProfileBlock = () => {
     const navigate = useNavigate()

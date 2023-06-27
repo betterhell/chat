@@ -62,10 +62,12 @@ class UserService {
             throw ApiError.BadRequest("User does not exist or incorrect password.")
         }
 
+        user.isOnline = true
         return await generateAndSaveTokens(user)
     }
 
     async logout(refreshToken) {
+
         return await tokenService.removeToken(refreshToken)
     }
 

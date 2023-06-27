@@ -13,7 +13,11 @@ import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
 import {useUserStore} from "../../store/user.store";
 
 
-const SearchUser = () => {
+interface SearchUserProps {
+    toggleChat: () => void
+}
+
+const SearchUser: React.FC<SearchUserProps> = ({toggleChat}) => {
     const [username, setUsername] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
 
@@ -41,7 +45,7 @@ const SearchUser = () => {
                 {isLoading
                     ? <>
                         {foundUser?.username && foundUser.username !== user?.username
-                            ? <FoundUser user={foundUser}/>
+                            ? <FoundUser toggleChat={toggleChat} user={foundUser}/>
                             : <NotFoundUser username={username} error={isError}/>
                         }
                     </>

@@ -18,9 +18,9 @@ const {
 } = require("../controllers/userController")
 
 router.patch('/user/:username', addToFriends)
-router.post('/user/:username', findUser)
-router.get('/users', authMiddleware, getAllUsers)
-router.get('/activate/:link', activateUser)
+router.post('/user/:username', authMiddleware, findUser)
+router.get('/users', getAllUsers)
+router.get('/activate/:link', authMiddleware, activateUser)
 router.get('/refresh', refreshUser)
 
 router.post('/registration', body("username").isLength({
@@ -32,8 +32,8 @@ router.post('/registration', body("username").isLength({
 router.post('/login', loginUser)
 router.post('/logout', logoutUser)
 
-router.delete('/user/:id', deleteUser)
+router.delete('/user/:id', authMiddleware, deleteUser)
 
-router.patch('/user/:id', updateUser)
+router.patch('/user/:id', authMiddleware, updateUser)
 
 module.exports = router
