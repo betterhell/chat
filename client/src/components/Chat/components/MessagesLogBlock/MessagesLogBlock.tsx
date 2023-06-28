@@ -3,16 +3,17 @@ import styles from "./styles.module.scss";
 
 import {Message} from "../../../../models/message.model";
 import MessageBlock from "../MessageBlock/MessageBlock";
-import {useChatStore} from "../../../../store/chat.store";
+
 import {useUserStore} from "../../../../store/user.store";
 import {useMessageStore} from "../../../../store/message.store";
-import {socket} from "../../../../socket";
-import EmptyChatBlock from "../EmptyChatBlock/EmptyChatBlock";
+
+import socket from "../../../../socket";
 
 const MessagesLogBlock = () => {
-    const {messages, handleNewMessage} = useMessageStore()
     const [connectionAlert, setConnectionAlert] = useState<string>("")
-    const {user, users} = useUserStore()
+
+    const {messages, handleNewMessage, fetchMessages} = useMessageStore()
+    const {user} = useUserStore()
 
     useEffect(() => {
         socket.on("message:responseMessage", (data: Message) => {
@@ -20,7 +21,11 @@ const MessagesLogBlock = () => {
                 handleNewMessage(data)
             }
         })
-    }, [socket])
+    }, [])
+
+    useEffect(() => {
+        fetchMessages()
+    }, [fetchMessages])
 
     useEffect(() => {
         socket.on("user:responseConnectMessage", (data) => {
@@ -37,18 +42,16 @@ const MessagesLogBlock = () => {
     return (
         <div className={styles.messages_log}>
             <p className={styles.connectionAlert}>{connectionAlert}</p>
-            {messages.map((message: Message) => {
-                return message.username === user?.username
-                    ? (<MessageBlock key={message.id}
-                                     view="user"
-                                     message={message}
-
-                    />)
-                    : (<MessageBlock key={message.id}
-                                     view="!user"
-                                     message={message}
-                        />
-                    )
+            {messages.map((message) => {
+                return user?._id === message.userId
+                    ? <MessageBlock key={message._id}
+                                    view="user"
+                                    message={message}
+                    />
+                    : <MessageBlock key={message._id}
+                                    view="!user"
+                                    message={message}
+                    />
             })}
         </div>
     )

@@ -7,7 +7,6 @@ import UserProfileBlock from "./components/UserProfileBlock/UserProfileBlock";
 import ContactsBlock from "./components/ContactsBlock/ContactsBlock";
 import SearchUser from "../SearchUser/SearchUser";
 import EmptyChatBlock from "./components/EmptyChatBlock/EmptyChatBlock";
-import {socket} from "../../socket";
 import {useUserStore} from "../../store/user.store";
 
 const Chat = () => {

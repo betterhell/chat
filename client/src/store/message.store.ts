@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {devtools} from "zustand/middleware";
 import {v4 as uuidv4} from "uuid";
-import {socket} from "../socket";
+import socket from "../socket";
 import MessageService from "../services/MessageService";
 import {useUserStore} from "./user.store";
 import {Message} from "../models/message.model";
@@ -17,6 +17,7 @@ interface messageStoreState {
 
     createMessage: (message: Message) => void
     handleNewMessage: (message: Message) => void
+    fetchMessages: () => void
 }
 
 export const useMessageStore = create<messageStoreState>()(
@@ -27,6 +28,7 @@ export const useMessageStore = create<messageStoreState>()(
                 text: "",
                 username: "",
                 timestamp: "",
+                userId: "",
             },
             messages: [],
             currentEmoji: "",
@@ -44,15 +46,16 @@ export const useMessageStore = create<messageStoreState>()(
                 try {
                     if (message.text.trim() && useUserStore.getState().user?.username) {
                         socket.emit("message:createMessage", {
-                            id: uuidv4(),
+                            _id: uuidv4(),
                             username: useUserStore.getState().user?.username,
                             text: message.text,
-                            timestamp: new Date().toLocaleTimeString("ru-RU", {timeStyle: "short"})
+                            timestamp: new Date().toLocaleTimeString("ru-RU", {timeStyle: "short"}),
+                            userId: useUserStore.getState().user?._id
                         })
                         set({message: {text: ""}})
                     }
                     const {data} = await MessageService.createMessage(message.text)
-                    set({message: {text: data.message}})
+                    set({message: {text: data.text}})
                     set({message: {text: ""}})
                     set({isLoading: false})
                 } catch (error: any) {
@@ -64,4 +67,13 @@ export const useMessageStore = create<messageStoreState>()(
             handleNewMessage: (message) => {
                 set({messages: [...get().messages, message]})
             },
+
+            fetchMessages: async () => {
+                try {
+                    const {data} = await MessageService.getMessages()
+                    set({messages: data})
+                } catch (error: any) {
+                    console.log(error)
+                }
+            }
         })))

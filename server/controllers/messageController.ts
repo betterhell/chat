@@ -6,9 +6,9 @@ const ApiError = require("../exeptions/api.error")
 class MessageController {
     async createMessage(req, res, next) {
         try {
-            const {message} = req.body
+            const {text} = req.body
             const user = req.user
-            const messageData = await messageService.create(message, user.id)
+            const messageData = await messageService.create(text, user.id)
             return res.json(messageData)
         } catch (error) {
             next(error)

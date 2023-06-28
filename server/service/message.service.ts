@@ -4,8 +4,8 @@ const Message = require("../models/message")
 const ApiError = require("../exeptions/api.error")
 
 class MessageService {
-    async create(message, userId) {
-        const newMessage = await Message.create({message, userId})
+    async create(text, userId) {
+        const newMessage = await Message.create({text, userId})
         if (!newMessage) {
             throw ApiError.BadRequest("Write something...")
         }

@@ -37,6 +37,12 @@ httpServer.listen(port, (err) => {
 
 //socket.io connection
 const io = require("socket.io")(httpServer, {
+    connectionStateRecovery: {
+        // the backup duration of the sessions and the packets
+        maxDisconnectionDuration: Infinity,
+        // whether to skip middlewares upon successful recovery
+        skipMiddlewares: true
+    },
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
@@ -45,23 +51,28 @@ const io = require("socket.io")(httpServer, {
 
 const rooms = new Map()
 
+let users = []
+
 io.on("connection", (socket) => {
     console.log(`User with id ${socket.id} is connected!`)
 
-    socket.on("user:connectMessage", (username: string) => {
-        socket.broadcast.emit("user:responseConnectMessage", `User ${username} has joined the chat!`)
-    })
-
-    socket.on("user:disconnectMessage", (username: string) => {
-        socket.broadcast.emit("user:responseDisconnectMessage", `User ${username} has left the chat!`)
-    })
-
     socket.on("user:connect", (user: any) => {
-        io.emit("user:responseConnect", user)
+        const newUserList = [...users, user]
+        console.log("after connect", newUserList)
+        io.emit("user:responseNewUserList", newUserList)
     })
 
-    socket.on('user:disconnect', (user: any) => {
-        io.emit("user:responseDisconnect", user)
+    socket.on('disconnect', (leavingUser: any) => {
+        const newUserList = users.filter((user) => user.id !== leavingUser._id)
+        console.log("filtered", newUserList)
+        io.emit("user:responseNewUserList", newUserList)
+    })
+
+    socket.on("user:connectMessage", (username: string) => {
+        socket.broadcast.emit("user:responseConnectMessage", `${username} has joined the chat!`)
+    })
+    socket.on("user:disconnectMessage", (username: string) => {
+        socket.broadcast.emit("user:responseDisconnectMessage", `${username} has left the chat!`)
     })
 
     socket.on("message:createMessage", (data: any) => {
@@ -69,10 +80,10 @@ io.on("connection", (socket) => {
     })
 
     socket.on('message:startTyping', (data: any) => {
-        io.emit('message:responseStartTyping', data)
+        socket.broadcast.emit('message:responseStartTyping', data)
     })
     socket.on('message:endTyping', (data: any) => {
-        io.emit('message:responseEndTyping', data)
+        socket.broadcast.emit('message:responseEndTyping', data)
     })
 })
 

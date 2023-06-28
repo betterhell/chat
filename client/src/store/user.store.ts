@@ -6,7 +6,7 @@ import {User} from "../models/user.model";
 import {AuthResponse} from "../models/response/authResponse";
 import {API_URL} from "../http";
 import UserService from "../services/UserService";
-import {socket} from "../socket";
+import socket from "../socket";
 
 interface useUserStore {
     users: User[] | []
@@ -53,13 +53,13 @@ export const useUserStore = create<useUserStore>()(
             login: async (email, password) => {
                 set({isLoading: true})
                 try {
-                    const response = await AuthService.login(email, password)
-                    localStorage.setItem("token", response.data.accessToken)
-                    set({user: response.data.user})
+                    const {data} = await AuthService.login(email, password)
+                    localStorage.setItem("token", data.accessToken)
+                    set({user: data.user})
                     set({isLoading: false})
                     set({isAuth: true})
-                    socket.emit("user:connectMessage", response.data.user.username)
-                    socket.emit("user:connect", response.data.user)
+                    socket.emit("user:connectMessage", data.user.username)
+                    socket.emit("user:connect", data.user)
                 } catch (error: any) {
                     set({isError: "User does not exist!"})
                     set({isLoading: false})
@@ -69,12 +69,12 @@ export const useUserStore = create<useUserStore>()(
             logout: async () => {
                 set({isLoading: true})
                 try {
-                    const response = await AuthService.logout()
+                    await AuthService.logout()
                     localStorage.removeItem("token")
                     set({isAuth: false})
                     set({isLoading: false})
                     socket.emit("user:disconnectMessage", get().user?.username)
-                    socket.emit("user:disconnect", get().user)
+                    socket.emit("disconnect", get().user)
                     set({user: null})
                 } catch (error: any) {
                     set({isError: error.response?.data?.message, isLoading: false})
@@ -97,7 +97,7 @@ export const useUserStore = create<useUserStore>()(
 
             findUser: async (username) => {
                 set({isLoading: true})
-                set({foundUser: {} as User})
+                set({foundUser: null})
                 try {
                     const {data} = await UserService.fetchUser(username)
                     set({foundUser: data})
