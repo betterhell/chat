@@ -21,6 +21,7 @@ interface useUserStore {
     checkAuth: () => void
     findUser: (username: string) => void
     addToFriends: (username: string) => void
+    updateUsers: (users: User[]) => void
 }
 
 export const useUserStore = create<useUserStore>()(
@@ -42,8 +43,9 @@ export const useUserStore = create<useUserStore>()(
                     localStorage.setItem("token", response.data.accessToken)
                     set({isAuth: true})
                     set({user: response.data.user})
-                    socket.emit("user:connectMessage", response.data.user.username)
                     set({isLoading: false})
+                    socket.emit("user:connectMessage", response.data.user.username)
+                    socket.emit("connect", response.data.user)
                 } catch (error: any) {
                     set({isError: "User already exist or incorrect credentials"})
                     set({isLoading: false})
@@ -59,7 +61,7 @@ export const useUserStore = create<useUserStore>()(
                     set({isLoading: false})
                     set({isAuth: true})
                     socket.emit("user:connectMessage", data.user.username)
-                    socket.emit("user:connect", data.user)
+                    socket.emit("connect", data.user)
                 } catch (error: any) {
                     set({isError: "User does not exist!"})
                     set({isLoading: false})
@@ -89,7 +91,7 @@ export const useUserStore = create<useUserStore>()(
                     set({isAuth: true})
                     set({user: response.data.user})
                     set({isLoading: false})
-
+                    socket.emit("connect", response.data.user)
                 } catch (error: any) {
                     set({isError: error.response?.data?.message})
                 }
@@ -107,6 +109,9 @@ export const useUserStore = create<useUserStore>()(
                 }
             },
 
+            updateUsers: (users) => {
+                set({users: users})
+            },
 
             addToFriends: async (username) => {
                 try {

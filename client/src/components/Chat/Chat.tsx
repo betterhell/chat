@@ -10,31 +10,17 @@ import EmptyChatBlock from "./components/EmptyChatBlock/EmptyChatBlock";
 import {useUserStore} from "../../store/user.store";
 
 const Chat = () => {
-    const [currentUser, setCurrentUser] = useState<boolean>(false)
-    const {foundUser} = useUserStore()
-
-    const toggleChat = () => {
-        setCurrentUser(!currentUser)
-    }
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.chat}>
                 <div className={styles.chat__aside}>
                     <UserProfileBlock/>
-                    <SearchUser toggleChat={toggleChat}/>
+                    <SearchUser/>
                     <ContactsBlock/>
                 </div>
 
                 <div className={styles.chat__main}>
-                    {/*{currentUser*/}
-                    {/*    ?*/}
-                    {/*    <>*/}
-                    {/*        <MessagesLogBlock/>*/}
-                    {/*        <SendMessageBlock/>*/}
-                    {/*    </>*/}
-                    {/*    : <EmptyChatBlock/>*/}
-                    {/*}*/}
                     <MessagesLogBlock/>
                     <SendMessageBlock/>
                 </div>
