@@ -51,21 +51,21 @@ const io = require("socket.io")(httpServer, {
 
 const rooms = new Map()
 
-let users = []
+let users = [
+    {username: "Vasyan", email: "cock@mail.com", id: "32125912791027510957910"}
+]
 
 io.on("connection", (socket) => {
     console.log(`User with id ${socket.id} is connected!`)
 
-    socket.on("user:connect", (user: any) => {
-        const newUserList = [...users, user]
-        console.log("after connect", newUserList)
-        io.emit("user:responseNewUserList", newUserList)
+    socket.on("connect", (user: any) => {
+        users.push(user)
+        io.emit("user:responseNewUserList", users)
     })
 
     socket.on('disconnect', (leavingUser: any) => {
-        const newUserList = users.filter((user) => user.id !== leavingUser._id)
-        console.log("filtered", newUserList)
-        io.emit("user:responseNewUserList", newUserList)
+        users = users.filter((user) => user.id !== leavingUser._id)
+        io.emit("user:responseNewUserList", users)
     })
 
     socket.on("user:connectMessage", (username: string) => {

@@ -17,9 +17,7 @@ const MessagesLogBlock = () => {
 
     useEffect(() => {
         socket.on("message:responseMessage", (data: Message) => {
-            if (data) {
-                handleNewMessage(data)
-            }
+            handleNewMessage(data)
         })
     }, [])
 

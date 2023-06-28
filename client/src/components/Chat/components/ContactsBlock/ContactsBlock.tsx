@@ -4,13 +4,12 @@ import {User} from "../../../../models/user.model";
 
 import socket from "../../../../socket";
 import loader from "../../../../assets/icons/Loader";
+import {useUserStore} from "../../../../store/user.store";
 
 const ContactsBlock = () => {
-    const [users, setUsers] = useState<[]>([])
+    const {users} = useUserStore()
 
-    useEffect(() => {
-        socket.on('user:responseNewUserList', (data) => setUsers(data));
-    }, [socket]);
+    console.log(users)
 
     return <div className={styles.contacts}>
         <ul>
