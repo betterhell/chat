@@ -6,10 +6,19 @@
 
   p {
     font-size: 13px;
+    transition: all 0.3s ease-in-out;
   }
 
   svg {
     width: 30px;
     height: 9px;
   }
+}
+
+.typingStatus_text {
+  opacity: 1;
+}
+
+.typingStatus_text__null {
+  opacity: 0;
 }

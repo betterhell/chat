@@ -18,11 +18,6 @@ const userSchema = new Schema({
         required: true,
         minLength: 6,
     },
-    birthDate: {
-        day: {type: Number},
-        month: {type: Number},
-        year: {type: Number}
-    },
     registeredAt: {
         type: Date,
         default: Date.now()

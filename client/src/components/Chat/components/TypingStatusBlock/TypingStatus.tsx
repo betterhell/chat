@@ -11,7 +11,9 @@ const TypingStatus: React.FC<TypingStatusProps> = ({status}) => {
 
     return (
         <div className={styles.typingStatus}>
-            {status && <p>{status} <DotsIcon/></p>}
+            {status
+                ? <p className={styles.typingStatus_text}>{status} <DotsIcon/></p>
+                : <p className={styles.typingStatus_text__null}></p>}
         </div>
 
     )

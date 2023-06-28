@@ -11,7 +11,7 @@ const {
     getAllMessage,
 } = require("../controllers/messageController")
 
-router.get('/messages', getAllMessage)
+router.get('/messages', authMiddleware, getAllMessage)
 router.post('/message', authMiddleware, createMessage)
 router.delete('/message/:id', deleteMessage)
 router.patch('/message/:id', updateMessage)

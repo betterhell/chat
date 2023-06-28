@@ -1,6 +1,7 @@
 export interface Message {
-    id?: string
+    _id?: string
     text: string
     username?: string
     timestamp?: string
+    userId?: string
 }

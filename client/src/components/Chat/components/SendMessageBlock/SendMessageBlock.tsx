@@ -4,16 +4,14 @@ import styles from "./styles.module.scss";
 import Input from "../../../../UI/Input/Input";
 
 import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
-
+import TypingStatus from "../TypingStatusBlock/TypingStatus";
 import {RiMailSendLine as SendMessageIcon} from "react-icons/ri"
 import {BsEmojiSmile as EmojiIcon} from "react-icons/bs"
-import {useReactMediaRecorder} from "react-media-recorder";
 
-import {socket} from "../../../../socket";
-import TypingStatus from "../TypingStatusBlock/TypingStatus";
+import socket from "../../../../socket";
+
 import {useUserStore} from "../../../../store/user.store";
 import {useMessageStore} from "../../../../store/message.store"
-import {User} from "../../../../models/user.model";
 
 const SendMessageBlock = () => {
     const {message, setMessage, createMessage} = useMessageStore()

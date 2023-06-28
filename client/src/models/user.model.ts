@@ -4,7 +4,7 @@ export interface User {
     password: string
     isActivatedEmail: boolean
     activationLink: string
-    id: string
+    _id: string
     birtDate: {
         day: string
         month: string
