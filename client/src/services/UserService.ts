@@ -11,7 +11,7 @@ export default class UserService {
         return $api.post<User>(`/user/${username}`)
     }
 
-    static async addToFriend(username: string): Promise<AxiosResponse<User>> {
-        return $api.patch<User>(`/user/${username}`)
+    static async addToFriend(user: User): Promise<AxiosResponse<User>> {
+        return $api.patch<User>(`/user/${user.username}`)
     }
 }

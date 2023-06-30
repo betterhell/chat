@@ -9,22 +9,11 @@ import Registration from "./components/Registration/Registration";
 
 import {useUserStore} from "./store/user.store";
 import PrivateRoute from "./routes/PrivateRoute/PrivateRoute";
-import {useChatStore} from "./store/chat.store";
-import socket from "./socket";
-import {User} from "./models/user.model";
-
-socket.on("user:responseNewUserList", (data: User[]) => {
-    console.log(new Date())
-    useUserStore.getState().updateUsers(data)
-})
 
 const App = () => {
     const {checkAuth, isAuth} = useUserStore()
-    const {socketSubscribe} = useChatStore()
 
     useEffect(() => {
-        socketSubscribe()
-
         if (localStorage.getItem("token")) {
             checkAuth()
         }

@@ -8,6 +8,7 @@ import {useUserStore} from "../../../../store/user.store";
 import {useMessageStore} from "../../../../store/message.store";
 
 import socket from "../../../../socket";
+import {User} from "../../../../models/user.model";
 
 const MessagesLogBlock = () => {
     const [connectionAlert, setConnectionAlert] = useState<string>("")
@@ -20,6 +21,11 @@ const MessagesLogBlock = () => {
             handleNewMessage(data)
         })
     }, [])
+
+    socket.on("user:responseNewUserList", (data: User[]) => {
+        console.log(new Date())
+        useUserStore.getState().updateUsers(data)
+    })
 
     useEffect(() => {
         fetchMessages()

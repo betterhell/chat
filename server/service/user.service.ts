@@ -32,7 +32,7 @@ class UserService {
     }
 
 
-    async getOneUser(username) {
+    async getUser(username) {
         const user = await User.findOne({username})
         if (!user) {
             throw ApiError.BadRequest("User not found.")
@@ -63,11 +63,11 @@ class UserService {
         }
 
         user.isOnline = true
+        await user.save()
         return await generateAndSaveTokens(user)
     }
 
     async logout(refreshToken) {
-
         return await tokenService.removeToken(refreshToken)
     }
 
@@ -83,7 +83,6 @@ class UserService {
         }
 
         const user = await User.findById(userData.id)
-
         return await generateAndSaveTokens(user)
     }
 
@@ -118,10 +117,21 @@ class UserService {
         return users
     }
 
-    async toFriend(username, updateFriends) {
+    async toFriend(friend, currentUserToken) {
+        const newFriend = await this.getUser(friend.username)
+        const userToken = await tokenService.findToken(currentUserToken)
+        const user = await User.findById(userToken.user)
 
+        if (user.friends.includes(newFriend._id)) {
+            throw ApiError.BadRequest("User already in friends.")
+        }
+
+        user.friends.push(newFriend)
+        newFriend.friends.push(user)
+
+        await user.save()
+        await newFriend.save()
     }
-
 }
 
 export default UserService

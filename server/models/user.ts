@@ -23,7 +23,12 @@ const userSchema = new Schema({
         default: Date.now()
     },
     isOnline: {type: Boolean, default: false},
-    friends: {type: []},
+    friends: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'User'
+        }]
+    },
     isActivatedMail: {type: Boolean, default: false},
     activationLink: {type: String}
 }, {
