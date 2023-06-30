@@ -7,6 +7,7 @@ import {AuthResponse} from "../models/response/authResponse";
 import {API_URL} from "../http";
 import UserService from "../services/UserService";
 import socket from "../socket";
+import login from "../components/Login/Login";
 
 interface useUserStore {
     users: User[]
@@ -117,10 +118,15 @@ export const useUserStore = create<useUserStore>()(
                 set({isLoading: true})
                 try {
                     const res = await UserService.addToFriend(user)
-                    console.log(res)
+
+                    if (!res) {
+                        throw new Error("User already in friends!")
+                    }
+
                     set({isLoading: false})
                 } catch (error: any) {
-                    set({isError: "User does not exist!", isLoading: false})
+                    console.log(error)
+                    set({isError: error, isLoading: false})
                 }
             }
         })))
