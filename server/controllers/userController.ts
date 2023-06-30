@@ -41,7 +41,7 @@ class UserController {
     async findUser(req, res, next) {
         try {
             const username = req.params.username
-            const userData = await userService.getOneUser(username)
+            const userData = await userService.getUser(username)
             return res.json(userData)
         } catch (error) {
             next(error)
@@ -125,9 +125,9 @@ class UserController {
 
     async addToFriends(req, res, next) {
         try {
-            const updateFriends = req.body
-            const username = req.params.username
-            const userData = await userService.toFriend(username, updateFriends)
+            const friend = req.params
+            const currentUserToken = req.cookies.refreshToken
+            const userData = await userService.toFriend(friend, currentUserToken)
 
             return res.json(userData)
         } catch (error) {

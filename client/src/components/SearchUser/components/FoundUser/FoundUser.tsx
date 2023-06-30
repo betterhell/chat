@@ -5,16 +5,21 @@ import {User} from "../../../../models/user.model";
 
 import ProfileIcon from "../../../../assets/icons/ProfileIcon";
 import {BsPersonFillAdd} from "react-icons/bs"
+import {useUserStore} from "../../../../store/user.store";
 
 interface FoundUserProps {
     user: User
-
 }
 
 const FoundUser: React.FC<FoundUserProps> = ({user}) => {
+    const {addToFriends} = useUserStore()
+
+    const addFriend = () => {
+        addToFriends(user)
+    }
 
     return (
-        <div className={styles.foundUser}>
+        <div onClick={addFriend} className={styles.foundUser}>
             <div className={styles.foundUser__main}>
                 <div className={styles.foundUser__main__avatar}><ProfileIcon/></div>
                 <div className={styles.foundUser__main__info}>

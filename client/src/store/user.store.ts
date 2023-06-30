@@ -9,7 +9,7 @@ import UserService from "../services/UserService";
 import socket from "../socket";
 
 interface useUserStore {
-    users: User[] | []
+    users: User[]
     user: User | null
     foundUser: User | null
     isAuth: boolean
@@ -20,7 +20,7 @@ interface useUserStore {
     logout: () => void
     checkAuth: () => void
     findUser: (username: string) => void
-    addToFriends: (username: string) => void
+    addToFriends: (user: User) => void
     updateUsers: (users: User[]) => void
 }
 
@@ -113,10 +113,11 @@ export const useUserStore = create<useUserStore>()(
                 set({users: users})
             },
 
-            addToFriends: async (username) => {
+            addToFriends: async (user) => {
+                set({isLoading: true})
                 try {
-                    const {data} = await UserService.addToFriend(username)
-                    console.log(data)
+                    const res = await UserService.addToFriend(user)
+                    console.log(res)
                     set({isLoading: false})
                 } catch (error: any) {
                     set({isError: "User does not exist!", isLoading: false})

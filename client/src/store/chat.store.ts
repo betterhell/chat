@@ -7,7 +7,6 @@ import {useUserStore} from "./user.store";
 
 interface chatStoreState {
     isLoading: boolean
-    socketSubscribe: () => void
 }
 
 export const useChatStore = create<chatStoreState>()(
@@ -15,10 +14,5 @@ export const useChatStore = create<chatStoreState>()(
         (set, get) => ({
             isLoading: false,
 
-            socketSubscribe: () => {
-                socket.on("connect", () => {
-                    console.log(new Date())
-                })
-            }
 
         })))
