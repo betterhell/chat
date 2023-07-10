@@ -18,5 +18,10 @@
     padding: 3px 6px;
     color: $main-white;
   }
+
+  .connectionAlert {
+    display: block;
+    position: fixed;
+  }
 }
 
