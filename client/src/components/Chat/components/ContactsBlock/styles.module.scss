@@ -2,9 +2,9 @@
 
 .contacts {
   background-color: white;
-  padding: 0 10px;
+  padding: 10px 10px 0 10px;
   height: calc(100% - 59px);
-  overflow-y: scroll;
+  overflow-y: auto;
 
   ul {
     list-style-type: none;

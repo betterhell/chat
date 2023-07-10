@@ -7,12 +7,34 @@ import UserProfileBlock from "./components/UserProfileBlock/UserProfileBlock";
 import ContactsBlock from "./components/ContactsBlock/ContactsBlock";
 import SearchUser from "../SearchUser/SearchUser";
 import { User } from "../../models/user.model";
+import socket from "../../socket";
+import { useUserStore } from "../../store/user.store";
 
-interface chatProps {
-  users: User[];
-}
+const Chat = () => {
+  const { user } = useUserStore();
+  const [users, setUsers] = useState<User[]>([]);
 
-const Chat: React.FC<chatProps> = ({ users }) => {
+  useEffect(() => {
+    socket.on("user:responseUsers", (users) => {
+      setUsers(users);
+    });
+
+    return () => {
+      socket.off("user:responseUsers");
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    socket.connect();
+
+    if (user) {
+      socket.emit("user:connect", user);
+    }
+    return () => {
+      socket.off("user:connect");
+    };
+  }, [socket, user]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.chat}>
