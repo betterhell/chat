@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import generateAndSaveTokens from "../features/generateAndSaveTokens";
+import { loadConfigFromFile } from "vite";
 
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
 
 const Token = require("../models/token");
 const User = require("../models/user");
+const Avatar = require("../models/avatar");
 
 const ApiError = require("../exeptions/api.error");
 
@@ -104,10 +106,21 @@ class UserService {
       throw ApiError.BadRequest("Not valid id.");
     }
 
+    await Avatar.findOneAndDelete({ userId });
+
+    console.log(userInfo.avatar);
+
+    const updatedAvatar = await Avatar.create({
+      userId,
+      initialName: userInfo.avatar.initialName,
+      name: userInfo.avatar.name,
+    });
+    await updatedAvatar.save();
+
     const updatedUser = await User.findByIdAndUpdate(userId, userInfo);
     await updatedUser.save();
 
-    return updatedUser;
+    return [updatedUser, updatedAvatar];
   }
 
   async users() {

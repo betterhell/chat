@@ -1,40 +1,46 @@
-const {Schema, model} = require("mongoose")
+const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     username: {
-        type: String,
-        trim: true,
-        unique: true,
+      type: String,
+      trim: true,
+      unique: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true,
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
-        type: String,
-        required: true,
-        minLength: 6,
+      type: String,
+      required: true,
+      minLength: 6,
     },
     registeredAt: {
-        type: Date,
-        default: Date.now()
+      type: Date,
+      default: Date.now(),
     },
-    isOnline: {type: Boolean, default: false},
+    isOnline: { type: Boolean, default: false },
     friends: {
-        type: [{
-            type: Schema.ObjectId,
-            ref: 'User'
-        }]
+      type: [
+        {
+          type: Schema.ObjectId,
+          ref: "User",
+        },
+      ],
     },
-    isActivatedMail: {type: Boolean, default: false},
-    activationLink: {type: String}
-}, {
-    versionKey: false
-})
+    isActivatedMail: { type: Boolean, default: false },
+    activationLink: { type: String },
+    avatar: { type: {}, default: null },
+  },
+  {
+    versionKey: false,
+  }
+);
 
-module.exports = model("User", userSchema)
+module.exports = model("User", userSchema);
 
-export {}
+export {};
