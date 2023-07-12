@@ -1,8 +1,25 @@
 import { Router } from "express";
 import { body } from "express-validator";
 
+const path = require("path");
+
 const multer = require("multer");
-const upload = multer({ dest: "./public/data/uploads/" });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/data/uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    console.log(file);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const authMiddleware = require("../middlewares/auth.middleware");
 

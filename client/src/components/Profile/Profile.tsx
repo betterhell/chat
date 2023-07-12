@@ -1,13 +1,22 @@
-import React from "react";
+import React, { SyntheticEvent, useState } from "react";
 import styles from "./styles.module.scss";
 import { useUserStore } from "../../store/user.store";
+import socket from "../../socket";
 
 interface ProfileProps {
   isActive: boolean;
 }
 
 const Profile: React.FC<ProfileProps> = ({ isActive }) => {
-  const { user } = useUserStore();
+  const { user, update } = useUserStore();
+  const [username, setUsername] = useState<string | null>();
+  const [avatar, setAvatar] = useState<File | null>(null);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!username || !avatar) return;
+    update(username, avatar);
+  };
 
   return (
     <div
@@ -18,8 +27,16 @@ const Profile: React.FC<ProfileProps> = ({ isActive }) => {
       }
     >
       <h2>Profile</h2>
-      <input placeholder={user?.username} type="text" />
-      <input placeholder={user?.email} type="text" />
+      <form encType="multipart/form-data" onSubmit={handleSubmit}>
+        <input
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder={user?.username}
+          type="text"
+        />
+        <input placeholder={user?.email} type="text" />
+        <input onChange={(e) => setAvatar(e.target.files![0])} type="file" />
+        <button type="submit">Update</button>
+      </form>
     </div>
   );
 };
