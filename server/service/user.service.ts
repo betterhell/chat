@@ -108,8 +108,6 @@ class UserService {
 
     await Avatar.findOneAndDelete({ userId });
 
-    console.log(userInfo.avatar);
-
     const updatedAvatar = await Avatar.create({
       userId,
       initialName: userInfo.avatar.initialName,

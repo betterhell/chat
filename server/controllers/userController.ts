@@ -122,9 +122,9 @@ class UserController {
       };
 
       if (
-        !req.file.mimetype.includes("jpeg") &&
-        !req.file.mimetype.includes("jpg") &&
-        !req.file.mimetype.includes("png")
+        !req.file.mimetype.toLowerCase().includes("jpeg") &&
+        !req.file.mimetype.toLowerCase().includes("jpg") &&
+        !req.file.mimetype.toLowerCase().includes("png")
       ) {
         return next(ApiError.BadRequest("This file is not suppoerted!"));
       }

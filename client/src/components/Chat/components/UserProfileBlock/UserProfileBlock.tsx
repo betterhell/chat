@@ -12,6 +12,7 @@ import { TbLogout } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 import { useUserStore } from "../../../../store/user.store";
+import { API_URL } from "../../../../http";
 
 const UserProfileBlock = () => {
   const navigate = useNavigate();
@@ -31,10 +32,11 @@ const UserProfileBlock = () => {
 
   return (
     <div className={styles.user_profile}>
-      <div className={styles.user_profile__info}>
-        <button onClick={toggleProfile}>
-          <ProfileIcon height="40" width="40" />
-        </button>
+      <div onClick={toggleProfile} className={styles.user_profile__info}>
+        <img
+          src={`${API_URL}/data/uploads/${user?.avatar.name}`}
+          alt="avatar"
+        />
         <h3>{user?.username}</h3>
       </div>
       <div className={styles.user_profile__actions}>

@@ -17,6 +17,7 @@ interface useUserStore {
   registration: (username: string, email: string, password: string) => void;
   login: (email: string, password: string) => void;
   logout: () => void;
+  update: (username: string, avatar: any) => void;
   checkAuth: () => void;
   findUser: (username: string) => void;
   addToFriends: (user: User) => void;
@@ -57,6 +58,7 @@ export const useUserStore = create<useUserStore>()(
         const { data } = await AuthService.login(email, password);
         localStorage.setItem("token", data.accessToken);
         set({ user: data.user });
+        console.log(data.user);
         set({ isLoading: false });
         set({ isAuth: true });
         socket.emit("user:connectingAlert", data.user.username);
@@ -78,6 +80,28 @@ export const useUserStore = create<useUserStore>()(
         set({ user: null });
       } catch (error: any) {
         set({ isError: error.response?.data?.message, isLoading: false });
+      }
+    },
+
+    update: async (username, avatar) => {
+      set({ isLoading: true });
+      try {
+        const formData = new FormData();
+        formData.append("avatar", avatar);
+        formData.append("username", username);
+
+        const response = await axios.post(
+          `${API_URL}/user/update/${get().user?._id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": `multipart/form-data`,
+            },
+          }
+        );
+        set({ isLoading: false });
+      } catch (error: any) {
+        set({ isError: error.response?.data?.message });
       }
     },
 
