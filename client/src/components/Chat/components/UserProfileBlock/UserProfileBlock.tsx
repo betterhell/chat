@@ -34,7 +34,8 @@ const UserProfileBlock = () => {
     <div className={styles.user_profile}>
       <div onClick={toggleProfile} className={styles.user_profile__info}>
         <img
-          src={`${API_URL}/data/uploads/${user?.avatar.name}`}
+          className={styles.user_avatar}
+          src={`${API_URL}/data/uploads/${user?.avatar?.name}`}
           alt="avatar"
         />
         <h3>{user?.username}</h3>
