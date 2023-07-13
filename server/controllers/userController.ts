@@ -134,10 +134,7 @@ class UserController {
         return next(ApiError.BadRequest("User does not exist."));
       }
 
-      return res.json({
-        userData,
-        userInfo,
-      });
+      return res.json(userInfo);
     } catch (error) {
       next(error);
     }
