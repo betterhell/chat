@@ -1,8 +1,6 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import { useUserStore } from "../../store/user.store";
-import socket from "../../socket";
-import { API_URL } from "../../http";
 
 interface ProfileProps {
   isActive: boolean;
@@ -17,6 +15,7 @@ const Profile: React.FC<ProfileProps> = ({ isActive }) => {
     e.preventDefault();
     if (!username || !avatar) return;
     update(username, avatar);
+    location.reload();
   };
 
   return (
