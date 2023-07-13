@@ -58,7 +58,6 @@ export const useUserStore = create<useUserStore>()(
         const { data } = await AuthService.login(email, password);
         localStorage.setItem("token", data.accessToken);
         set({ user: data.user });
-        console.log(data.user);
         set({ isLoading: false });
         set({ isAuth: true });
         socket.emit("user:connectingAlert", data.user.username);
@@ -90,7 +89,7 @@ export const useUserStore = create<useUserStore>()(
         formData.append("avatar", avatar);
         formData.append("username", username);
 
-        const response = await axios.post(
+        await axios.post(
           `${API_URL}/user/update/${get().user?._id}`,
           formData,
           {

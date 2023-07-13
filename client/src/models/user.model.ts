@@ -13,7 +13,7 @@ export interface User {
   isOline: boolean;
   friends: User[];
   avatar: {
-    initialName: string;
+    initialName?: string;
     name: string;
   };
 }

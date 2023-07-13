@@ -118,7 +118,7 @@ class UserService {
     const updatedUser = await User.findByIdAndUpdate(userId, userInfo);
     await updatedUser.save();
 
-    return [updatedUser, updatedAvatar];
+    return updatedUser;
   }
 
   async users() {
