@@ -114,7 +114,8 @@ class UserController {
     try {
       const userId = req.params.id;
       const userInfo = {
-        updatedInfo: req.body,
+        username: req.body.username,
+        password: req.body.password,
         avatar: {
           initialName: req.file.originalname,
           name: req.file.filename,
