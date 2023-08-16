@@ -1,0 +1,27 @@
+@import "../../../../styles/variables";
+
+.messages_log {
+  position: relative;
+  overflow-y: auto;
+  background-color: $main-white;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 36px);
+
+  button {
+    height: 59px;
+    align-self: flex-end;
+    background-color: $warning-button;
+    cursor: pointer;
+    border: none;
+    padding: 3px 6px;
+    color: $main-white;
+  }
+
+  .connectionAlert {
+    display: block;
+    position: fixed;
+  }
+}
+

@@ -1,0 +1,27 @@
+@import "../../../../../styles/variables";
+
+.user {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid $border-strong;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.avatar {
+  display: flex;
+  margin-right: 8px;
+}
+
+.username {
+  color: $primary-text;
+}
+
+.online {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #25d366;
+}
