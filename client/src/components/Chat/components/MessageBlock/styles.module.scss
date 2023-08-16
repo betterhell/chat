@@ -1,0 +1,41 @@
+@import "../../../../styles/variables";
+
+.other_message {
+  margin: 10px 20px;
+  background-color: $chat-main-background;
+  min-width: 400px;
+  max-width: fit-content;
+  box-sizing: border-box;
+  padding: 4px;
+  border-radius: 8px;
+
+  h4 {
+    color: $primary-title;
+    margin: 0;
+  }
+
+  p {
+    justify-items: flex-end;
+    color: $primary-text;
+  }
+}
+
+.timestamp {
+  font-size: 12px;
+  text-align: end;
+}
+
+.user_message {
+  align-self: flex-end;
+  margin: 10px 20px;
+  background-color: $main-link-color;
+  min-width: 400px;
+  max-width: fit-content;
+  box-sizing: border-box;
+  padding: 4px;
+  border-radius: 8px;
+
+  p {
+    color: $main-white;
+  }
+}

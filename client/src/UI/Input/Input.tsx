@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from "./styles.module.scss"
+import {Message} from "../../models/message.model";
 
 interface InputProps {
     placeholder: string
