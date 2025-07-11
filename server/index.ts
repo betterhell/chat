@@ -41,7 +41,7 @@ httpServer.listen(port, (err) => {
   err ? console.log(err) : console.log(`Server is up on port ${port}!`);
 });
 
-//socket.io connection
+//socket.io connectio
 const io = new Server(httpServer, {
   connectionStateRecovery: {
     maxDisconnectionDuration: 2 * 60 * 1000,
