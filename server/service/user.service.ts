@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import generateAndSaveTokens from "../features/generateAndSaveTokens";
-import { loadConfigFromFile } from "vite";
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const uuid = require("uuid");
 
 const Token = require("../models/token");

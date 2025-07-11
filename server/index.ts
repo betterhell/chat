@@ -12,7 +12,7 @@ const messageRoute = require("./routes/message.routes");
 import { Server } from "socket.io";
 
 const corsOptions = {
-  origin: process.env.VITE_CLIENT_URL,
+  origin: process.env.VITE_CLIENT_URL || 'http://localhost:5173',
   credentials: true,
 };
 
@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(userRouter);
@@ -34,7 +35,8 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.log(`DB connection error: ${error}`));
 
-const port = process.env.VITE_PORT || 5000;
+const port = process.env.VITE_PORT || 5001;
+
 httpServer.listen(port, (err) => {
   err ? console.log(err) : console.log(`Server is up on port ${port}!`);
 });
