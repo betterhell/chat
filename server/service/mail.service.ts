@@ -6,8 +6,8 @@ class MailService {
     constructor() {
         this.transporter = nodemailer.createTransport({
             host: process.env.VITE_SMTP_HOST,
-            port: process.env.VITE_SMTP_PORT,
-            secure: false,
+            port: Number(process.env.VITE_SMTP_PORT),
+            secure: true,
             auth: {
                 user: process.env.VITE_SMTP_USER,
                 pass: process.env.VITE_SMTP_PASSWORD
