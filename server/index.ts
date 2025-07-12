@@ -12,7 +12,11 @@ const messageRoute = require("./routes/message.routes");
 import { Server } from "socket.io";
 
 const corsOptions = {
-  origin: process.env.VITE_CLIENT_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'https://client-ltgysr1bn-betterhells-projects.vercel.app',
+    process.env.VITE_CLIENT_URL
+  ].filter(Boolean),
   credentials: true,
 };
 
