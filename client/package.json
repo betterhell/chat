@@ -19,7 +19,7 @@
     "react-loader-spinner": "^5.3.4",
     "react-router-dom": "^6.11.1",
     "sass": "^1.89.2",
-    "socket.io-client": "^4.6.1",
+    "socket.io-client": "^4.8.1",
     "uuid": "^9.0.0",
     "zustand": "^4.3.8"
   },

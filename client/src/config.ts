@@ -1,10 +1,3 @@
-// Конфигурация для разных окружений
-const isDevelopment = import.meta.env.DEV;
-
-export const API_URL = isDevelopment 
-  ? "http://localhost:5001" 
-  : "https://server-two-tan.vercel.app";
-
-export const SOCKET_URL = isDevelopment 
-  ? "http://localhost:5001" 
-  : "https://server-two-tan.vercel.app";
+// Configuration for API and WebSocket URLs
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';

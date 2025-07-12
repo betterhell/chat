@@ -9,7 +9,7 @@
     "./node_modules/@types/express/index.d.ts"
   ],
   "include": [
-    "src/**/*.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "node_modules"

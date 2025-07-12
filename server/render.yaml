@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: chat-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_DB_URL
+        sync: false
+      - key: VITE_CLIENT_URL
+        sync: false
+      - key: VITE_PORT
+        value: 10000 
