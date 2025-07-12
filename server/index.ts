@@ -5,15 +5,14 @@ const mongoose = require("mongoose");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const httpServer = require("http").Server(app);
 const errorMiddleware = require("./middlewares/error.middleware");
 const userRouter = require("./routes/user.routes");
 const messageRoute = require("./routes/message.routes");
+import { Server } from "socket.io";
 
 const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'https://chat-client-six-tau.vercel.app'
-  ],
+  origin: process.env.VITE_CLIENT_URL || 'http://localhost:5173',
   credentials: true,
 };
 
@@ -28,24 +27,73 @@ app.use(userRouter);
 app.use(messageRoute);
 app.use(errorMiddleware);
 
-// Подключение к MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || process.env.VITE_DB_URL, {
+  .connect(process.env.VITE_DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.log(`DB connection error: ${error}`));
 
-// Для Vercel serverless функции
-const port = process.env.PORT || process.env.VITE_PORT || 5001;
+const port = process.env.VITE_PORT || 5001;
 
-// Экспортируем app для Vercel
-module.exports = app;
+httpServer.listen(port, (err) => {
+  err ? console.log(err) : console.log(`Server is up on port ${port}!`);
+});
 
-// Запускаем сервер только если не на Vercel
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  app.listen(port, () => {
-    console.log(`Server is up on port ${port}!`);
+//socket.io connectio
+const io = new Server(httpServer, {
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000,
+    skipMiddlewares: true,
+  },
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+let users = [];
+
+io.on("connection", (socket) => {
+  console.log(`User with id ${socket.id} is connected!`);
+
+  socket.on("user:connect", (user) => {
+    !users.some((usr) => usr._id === user._id) &&
+      users.push({
+        ...user,
+        socketId: socket.id,
+      });
+    io.emit("user:responseUsers", users);
   });
-}
+
+  socket.on("user:disconnect", (leavingUser) => {
+    users = users.filter((user) => user._id !== leavingUser._id);
+    io.emit("user:responseUsers", users);
+  });
+
+  socket.on("user:connectingAlert", (username: string) => {
+    socket.broadcast.emit(
+      "user:responseConnectMessage",
+      `${username} has joined the chat!`
+    );
+  });
+
+  socket.on("user:disconnectingAlert", (username: string) => {
+    socket.broadcast.emit(
+      "user:responseDisconnectMessage",
+      `${username} has left the chat!`
+    );
+  });
+
+  socket.on("message:createMessage", (message: any) => {
+    io.emit("message:responseMessage", message);
+  });
+
+  socket.on("message:startTyping", (data: any) => {
+    socket.broadcast.emit("message:responseStartTyping", data);
+  });
+  socket.on("message:endTyping", (data: any) => {
+    socket.broadcast.emit("message:responseEndTyping", data);
+  });
+});
