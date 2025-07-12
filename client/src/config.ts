@@ -3,8 +3,8 @@ const isDevelopment = import.meta.env.DEV;
 
 export const API_URL = isDevelopment 
   ? "http://localhost:5001" 
-  : "https://server-j8g4qmzsw-betterhells-projects.vercel.app";
+  : "https://server-two-tan.vercel.app";
 
 export const SOCKET_URL = isDevelopment 
   ? "http://localhost:5001" 
-  : "https://server-j8g4qmzsw-betterhells-projects.vercel.app";
+  : "https://server-two-tan.vercel.app";

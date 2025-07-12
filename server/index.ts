@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 const corsOptions = {
   origin: [
     'http://localhost:5173',
-    'https://client-ltgysr1bn-betterhells-projects.vercel.app',
+    'https://client-seven-sage.vercel.app',
     process.env.VITE_CLIENT_URL
   ].filter(Boolean),
   credentials: true,
