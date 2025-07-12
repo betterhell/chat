@@ -60,7 +60,7 @@ class UserService {
       throw ApiError.BadRequest("User does not exist or incorrect email.");
     }
 
-    const isPassEquals = await bcrypt.compareSync(password, user.password);
+    const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
       throw ApiError.BadRequest("User does not exist or incorrect password.");
     }
