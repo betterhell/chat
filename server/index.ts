@@ -75,13 +75,13 @@ const io = new Server(httpServer, {
   },
 });
 
-let users = [];
+let users: any[] = [];
 
 io.on("connection", (socket) => {
   console.log(`User with id ${socket.id} is connected!`);
 
-  socket.on("user:connect", (user) => {
-    !users.some((usr) => usr._id === user._id) &&
+  socket.on("user:connect", (user: any) => {
+    !users.some((usr: any) => usr._id === user._id) &&
       users.push({
         ...user,
         socketId: socket.id,
@@ -89,8 +89,8 @@ io.on("connection", (socket) => {
     io.emit("user:responseUsers", users);
   });
 
-  socket.on("user:disconnect", (leavingUser) => {
-    users = users.filter((user) => user._id !== leavingUser._id);
+  socket.on("user:disconnect", (leavingUser: any) => {
+    users = users.filter((user: any) => user._id !== leavingUser._id);
     io.emit("user:responseUsers", users);
   });
 
