@@ -12,7 +12,10 @@ const messageRoute = require("./routes/message.routes");
 import { Server } from "socket.io";
 
 const corsOptions = {
-  origin: process.env.VITE_CLIENT_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'https://client-tau-three-68.vercel.app'
+  ],
   credentials: true,
 };
 
@@ -53,7 +56,7 @@ const io = new Server(httpServer, {
   },
 });
 
-let users = [];
+let users: any[] = [];
 
 io.on("connection", (socket) => {
   console.log(`User with id ${socket.id} is connected!`);
