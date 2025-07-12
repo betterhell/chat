@@ -12,7 +12,7 @@ import { TbLogout } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 import { useUserStore } from "../../../../store/user.store";
-import { API_URL } from "../../../../http";
+import { API_URL } from "../../../../config";
 
 const UserProfileBlock = () => {
   const navigate = useNavigate();

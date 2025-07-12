@@ -4,7 +4,7 @@ import axios from "axios";
 import AuthService from "../services/AuthService";
 import { User } from "../models/user.model";
 import { AuthResponse } from "../models/response/authResponse";
-import { API_URL } from "../http";
+import { API_URL } from "../config";
 import UserService from "../services/UserService";
 import socket from "../socket";
 
