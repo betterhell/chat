@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 const corsOptions = {
   origin: [
     'http://localhost:5173',
-    'https://client-tau-three-68.vercel.app'
+    'https://chat-client-6ifix8e4j-betterhells-projects.vercel.app'
   ],
   credentials: true,
 };
