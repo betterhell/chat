@@ -11,8 +11,5 @@
       "src": "/(.*)",
       "dest": "/index.ts"
     }
-  ],
-  "env": {
-    "VITE_CLIENT_URL": "https://client-ltgysr1bn-betterhells-projects.vercel.app"
-  }
+  ]
 } 
