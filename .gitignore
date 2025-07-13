@@ -48,5 +48,4 @@ node_modules/
 
 # Build outputs
 dist/
-build/ 
-.vercel
+build/

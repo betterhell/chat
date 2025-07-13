@@ -14,9 +14,7 @@ import { Server } from "socket.io";
 const corsOptions = {
   origin: [
     'http://localhost:5173',
-    'https://client-seven-sage.vercel.app',
-    process.env.VITE_CLIENT_URL,
-    process.env.RENDER_EXTERNAL_URL
+    process.env.VITE_CLIENT_URL || 'http://localhost:5173'
   ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -28,32 +26,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-
-// CORS middleware
 app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.options('*', cors(corsOptions));
-
-// Additional CORS headers for all responses
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'https://client-seven-sage.vercel.app',
-    process.env.VITE_CLIENT_URL,
-    process.env.RENDER_EXTERNAL_URL
-  ].filter(Boolean);
-  
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  next();
-});
-
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(userRouter);
@@ -74,7 +47,7 @@ httpServer.listen(port, (err) => {
   err ? console.log(err) : console.log(`Server is up on port ${port}!`);
 });
 
-//socket.io connectio
+//socket.io connection
 const io = new Server(httpServer, {
   connectionStateRecovery: {
     maxDisconnectionDuration: 2 * 60 * 1000,
