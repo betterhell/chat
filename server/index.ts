@@ -92,6 +92,15 @@ io.on("connection", (socket) => {
     );
   });
 
+  socket.on("user:updateProfile", (updatedUser: any) => {
+    // Обновляем пользователя в массиве users
+    const userIndex = users.findIndex((user: any) => user._id === updatedUser._id);
+    if (userIndex !== -1) {
+      users[userIndex] = { ...users[userIndex], ...updatedUser };
+      io.emit("user:responseUsers", users);
+    }
+  });
+
   socket.on("message:createMessage", (message: any) => {
     io.emit("message:responseMessage", message);
   });

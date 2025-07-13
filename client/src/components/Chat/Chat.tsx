@@ -15,6 +15,20 @@ const Chat = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
+    if (user) {
+      setUsers(prevUsers => {
+        const userIndex = prevUsers.findIndex(u => u._id === user._id);
+        if (userIndex !== -1) {
+          const updatedUsers = [...prevUsers];
+          updatedUsers[userIndex] = { ...updatedUsers[userIndex], ...user };
+          return updatedUsers;
+        }
+        return prevUsers;
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
     socket.on("user:responseUsers", (users) => {
       setUsers(users);
     });

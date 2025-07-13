@@ -115,7 +115,6 @@ class UserController {
       const userId = req.params.id;
       const userInfo = {
         username: req.body.username,
-        password: req.body.password,
         avatar: {
           initialName: req.file.originalname,
           name: req.file.filename,
@@ -135,7 +134,7 @@ class UserController {
         return next(ApiError.BadRequest("User does not exist."));
       }
 
-      return res.json(userInfo);
+      return res.json(userData);
     } catch (error) {
       next(error);
     }

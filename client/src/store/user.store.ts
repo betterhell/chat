@@ -84,23 +84,40 @@ export const useUserStore = create<useUserStore>()(
 
     update: async (username, avatar) => {
       set({ isLoading: true });
+      set({ isError: "" });
+      
       try {
         const formData = new FormData();
         formData.append("avatar", avatar);
         formData.append("username", username);
 
-        await axios.post(
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
           `${API_URL}/user/update/${get().user?._id}`,
           formData,
           {
             headers: {
               "Content-Type": `multipart/form-data`,
+              "Authorization": `Bearer ${token}`,
             },
           }
         );
-        set({ isLoading: false });
+        
+        const updatedUser = response.data;
+        
+        set((state) => ({ 
+          ...state, 
+          user: updatedUser,
+          isLoading: false, 
+          isError: "" 
+        }));
+        
+        socket.emit("user:updateProfile", updatedUser);
       } catch (error: any) {
-        set({ isError: error.response?.data?.message });
+        console.error("Update error:", error);
+        const errorMessage = error.response?.data?.message || "Failed to update profile";
+        set({ isError: errorMessage, isLoading: false });
+        throw error;
       }
     },
 

@@ -114,7 +114,14 @@ class UserService {
     });
     await updatedAvatar.save();
 
-    const updatedUser = await User.findByIdAndUpdate(userId, userInfo);
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      { 
+        username: userInfo.username,
+        avatar: userInfo.avatar 
+      }, 
+      { new: true }
+    );
     await updatedUser.save();
 
     return updatedUser;

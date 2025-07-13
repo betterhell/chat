@@ -52,3 +52,19 @@
   border: 2px solid $shadow-rgb;
   margin-right: 6px;
 }
+
+.user_avatar_fallback {
+  max-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid $shadow-rgb;
+  margin-right: 6px;
+  background-color: $chat-main-background;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.hidden {
+    display: none;
+  }
+}

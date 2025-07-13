@@ -19,7 +19,9 @@ const UserProfileBlock = () => {
 
   const [profileActive, setProfileActive] = useState<boolean>(false);
 
-  const { user, logout } = useUserStore();
+  const { user, logout} = useUserStore();
+
+  const userKey = `${user?._id || 'no-user'}-${user?.avatar?.name || 'no-avatar'}-${user?.username || 'no-username'}`;
 
   const handleLogout = () => {
     logout();
@@ -31,14 +33,30 @@ const UserProfileBlock = () => {
   };
 
   return (
-    <div className={styles.user_profile}>
+    <div className={styles.user_profile} key={userKey}>
       <div onClick={toggleProfile} className={styles.user_profile__info}>
-        <img
-          className={styles.user_avatar}
-          src={`${API_URL}/data/uploads/${user?.avatar?.name}`}
-          alt="avatar"
-        />
-        <h3>{user?.username}</h3>
+        {user?.avatar?.name ? (
+          <img
+            className={styles.user_avatar}
+            src={`${API_URL}/data/uploads/${user.avatar.name}`}
+            alt="avatar"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              const fallbackElement = e.currentTarget.nextElementSibling as HTMLElement;
+              if (fallbackElement) {
+                fallbackElement.classList.remove('hidden');
+                fallbackElement.style.display = 'flex';
+              }
+            }}
+          />
+        ) : null}
+        <div 
+          className={`${styles.user_avatar_fallback} ${user?.avatar?.name ? 'hidden' : ''}`}
+          style={{ display: user?.avatar?.name ? 'none' : 'flex' }}
+        >
+          <ProfileIcon width="40" height="40" />
+        </div>
+        <h3>{user?.username || 'User'}</h3>
       </div>
       <div className={styles.user_profile__actions}>
         <button>
