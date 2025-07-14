@@ -9,7 +9,6 @@ A modern real-time chat application built with React, Node.js, and Socket.IO. Th
 - **User authentication** with JWT tokens
 - **User registration and login** with email verification
 - **User profile management** with avatar upload
-- **Friend system** - add users to friends list
 - **User search** functionality
 - **Online/offline status** tracking
 - **Typing indicators** in real-time
@@ -239,25 +238,6 @@ Delete message (requires authentication)
 - ESLint for code linting
 - Prettier for code formatting
 - SCSS modules for styling
-
-## 🚀 Deployment
-
-### Frontend Deployment
-1. Build the project: `npm run build`
-2. Deploy the `dist/` folder to your hosting service
-
-### Backend Deployment
-1. Set environment variables for production
-2. Build the project: `npm run build`
-3. Start the server: `npm start`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 
 ## 📄 License
 
