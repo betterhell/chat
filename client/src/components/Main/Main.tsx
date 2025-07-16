@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link, Navigate} from 'react-router-dom';
 import styles from "./styles.module.scss"
-import {useUserStore} from "../../store/user.store";
-import Loader from "../../assets/icons/Loader";
+import {useUserStore} from "@/store/user.store";
+import Loader from "@/assets/icons/Loader";
 
 const Main = () => {
     const {isAuth, isLoading} = useUserStore()

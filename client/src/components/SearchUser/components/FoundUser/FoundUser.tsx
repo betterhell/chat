@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from "./styles.module.scss";
 
-import {User} from "../../../../models/user.model";
+import {User} from "@/models/user.model";
 
-import ProfileIcon from "../../../../assets/icons/ProfileIcon";
+import ProfileIcon from "@/assets/icons/ProfileIcon";
 import {BsPersonFillAdd} from "react-icons/bs"
-import {useUserStore} from "../../../../store/user.store";
-import { API_URL } from "../../../../config";
+import {useUserStore} from "@/store/user.store";
+import { API_URL } from "@/config";
 
 interface FoundUserProps {
     user: User

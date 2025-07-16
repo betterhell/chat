@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import { useUserStore } from "../../store/user.store";
+import { useUserStore } from "@/store/user.store";
 
 interface ProfileProps {
   isActive: boolean;

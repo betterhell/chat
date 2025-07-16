@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import ProfileIcon from "../../../../../assets/icons/ProfileIcon";
-import { User } from "../../../../../models/user.model";
-import { API_URL } from "../../../../../config";
+import ProfileIcon from "@/assets/icons/ProfileIcon";
+import { User } from "@/models/user.model";
+import { API_URL } from "@/config";
 
 interface ContactUserProps {
   user: User;

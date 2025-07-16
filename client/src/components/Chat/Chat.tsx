@@ -5,10 +5,10 @@ import SendMessageBlock from "./components/SendMessageBlock/SendMessageBlock";
 import MessagesLogBlock from "./components/MessagesLogBlock/MessagesLogBlock";
 import UserProfileBlock from "./components/UserProfileBlock/UserProfileBlock";
 import ContactsBlock from "./components/ContactsBlock/ContactsBlock";
-import SearchUser from "../SearchUser/SearchUser";
-import { User } from "../../models/user.model";
-import socket from "../../socket";
-import { useUserStore } from "../../store/user.store";
+import SearchUser from "@/components/SearchUser/SearchUser";
+import { User } from "@/models/user.model";
+import socket from "@/socket";
+import { useUserStore } from "@/store/user.store";
 
 const Chat = () => {
   const { user } = useUserStore();

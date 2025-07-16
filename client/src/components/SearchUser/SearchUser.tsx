@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import styles from "./styles.module.scss"
 
-import Input from "../../UI/Input/Input";
-import FilterIcon from "../../assets/icons/FilterIcon";
+import Input from "@/UI/Input/Input";
+import FilterIcon from "@/assets/icons/FilterIcon";
 
-import UserService from "../../services/UserService";
-import {User} from "../../models/user.model";
+import UserService from "@/services/UserService";
+import {User} from "@/models/user.model";
 
 import FoundUser from "./components/FoundUser/FoundUser";
 import NotFoundUser from "./components/NotFoundUser/NotFoundUser";
-import DotsIcon from "../../assets/icons/DotsIcon/DotsIcon";
-import {useUserStore} from "../../store/user.store";
+import DotsIcon from "@/assets/icons/DotsIcon/DotsIcon";
+import {useUserStore} from "@/store/user.store";
 
 
 const SearchUser = () => {

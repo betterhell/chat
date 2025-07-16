@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import styles from "./styles.module.scss"
 
 import {Link, useNavigate} from "react-router-dom";
-import {useUserStore} from "../../store/user.store";
-import Loader from "../../assets/icons/Loader";
-import Error from "../Error/Error";
+import {useUserStore} from "@/store/user.store";
+import Loader from "@/assets/icons/Loader";
+import Error from "@/components/Error/Error";
 
 const Login = () => {
     const navigate = useNavigate()

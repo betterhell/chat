@@ -60,8 +60,8 @@ export const useMessageStore = create<messageStoreState>()(
         set({ message: { text: data.text } });
         set({ message: { text: "" } });
         set({ isLoading: false });
-      } catch (error: any) {
-        set({ isError: error.response?.data?.message });
+      } catch (error: unknown) {
+        set({ isError: (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data) ? (error.response as any).data.message : undefined });
         set({ isLoading: false });
       }
     },
@@ -74,7 +74,7 @@ export const useMessageStore = create<messageStoreState>()(
       try {
         const { data } = await MessageService.getMessages();
         set({ messages: data });
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.log(error);
       }
     },

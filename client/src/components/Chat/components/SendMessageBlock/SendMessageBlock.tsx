@@ -20,7 +20,7 @@ const SendMessageBlock = () => {
   const [currentEmoji, setCurrentEmoji] = useState<string>("");
   const [typingStatus, setTypingStatus] = useState<string | "">("");
 
-  let timeOutTyping: any = null;
+  let timeOutTyping: ReturnType<typeof setTimeout> | null = null;
 
   const changeTypingStatus = (data: string) => {
     setTypingStatus(data);
@@ -46,7 +46,7 @@ const SendMessageBlock = () => {
   };
 
   const handleStartTyping = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    clearTimeout(timeOutTyping);
+    clearTimeout(timeOutTyping as unknown as number);
     if (e.code === "Backspace" || e.code === "Space") {
       return;
     }

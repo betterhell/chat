@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import axios from "axios";
-import AuthService from "../services/AuthService";
-import { User } from "../models/user.model";
-import { AuthResponse } from "../models/response/authResponse";
-import { API_URL } from "../config";
-import UserService from "../services/UserService";
-import socket from "../socket";
+import AuthService from "@/services/AuthService";
+import { User } from "@/models/user.model";
+import { AuthResponse } from "@/models/response/authResponse";
+import { API_URL } from "@/config";
+import UserService from "@/services/UserService";
+import socket from "@/socket";
 
 interface useUserStore {
   user: User | null;
@@ -17,7 +17,7 @@ interface useUserStore {
   registration: (username: string, email: string, password: string) => void;
   login: (email: string, password: string) => void;
   logout: () => void;
-  update: (username: string, avatar: any) => void;
+  update: (username: string, avatar: File) => void;
   checkAuth: () => void;
   findUser: (username: string) => void;
   addToFriends: (user: User) => void;
@@ -46,7 +46,7 @@ export const useUserStore = create<useUserStore>()(
         set({ user: data.user });
         set({ isLoading: false });
         socket.emit("user:connectingAlert", data.user.username);
-      } catch (error: any) {
+      } catch (error: unknown) {
         set({ isError: "User already exist or incorrect credentials" });
         set({ isLoading: false });
       }
@@ -61,7 +61,7 @@ export const useUserStore = create<useUserStore>()(
         set({ isLoading: false });
         set({ isAuth: true });
         socket.emit("user:connectingAlert", data.user.username);
-      } catch (error: any) {
+      } catch (error: unknown) {
         set({ isError: "User does not exist!" });
         set({ isLoading: false });
       }
@@ -77,8 +77,8 @@ export const useUserStore = create<useUserStore>()(
         socket.emit("user:disconnectingAlert", get().user?.username);
         socket.emit("user:disconnect", get().user);
         set({ user: null });
-      } catch (error: any) {
-        set({ isError: error.response?.data?.message, isLoading: false });
+      } catch (error: unknown) {
+        set({ isError: (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data) ? (error.response as any).data.message : undefined, isLoading: false });
       }
     },
 
@@ -113,9 +113,12 @@ export const useUserStore = create<useUserStore>()(
         }));
         
         socket.emit("user:updateProfile", updatedUser);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Update error:", error);
-        const errorMessage = error.response?.data?.message || "Failed to update profile";
+        let errorMessage = "Failed to update profile";
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
+          errorMessage = (error.response as any).data.message;
+        }
         set({ isError: errorMessage, isLoading: false });
         throw error;
       }
@@ -131,8 +134,8 @@ export const useUserStore = create<useUserStore>()(
         set({ isAuth: true });
         set({ user: data.user });
         set({ isLoading: false });
-      } catch (error: any) {
-        set({ isError: error.response?.data?.message });
+      } catch (error: unknown) {
+        set({ isError: (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data) ? (error.response as any).data.message : undefined });
       }
     },
 
@@ -143,7 +146,7 @@ export const useUserStore = create<useUserStore>()(
         const { data } = await UserService.fetchUser(username);
         set({ foundUser: data });
         set({ isLoading: false });
-      } catch (error: any) {
+      } catch (error: unknown) {
         set({ isError: "User does not exist!", isLoading: false });
       }
     },
@@ -158,9 +161,9 @@ export const useUserStore = create<useUserStore>()(
         }
 
         set({ isLoading: false });
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.log(error);
-        set({ isError: error, isLoading: false });
+        set({ isError: error instanceof Error ? error.message : String(error), isLoading: false });
       }
     },
   }))
