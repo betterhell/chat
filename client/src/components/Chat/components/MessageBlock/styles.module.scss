@@ -1,7 +1,7 @@
 @use "../../../../styles/variables" as *;
 
 .other_message {
-  margin: 10px 20px;
+  margin: 10px 40px;
   background-color: $chat-main-background;
   min-width: 200px;
   max-width: fit-content;
@@ -27,7 +27,7 @@
 
 .user_message {
   align-self: flex-end;
-  margin: 10px 20px;
+  margin: 10px 40px;
   background-color: $main-link-color;
   min-width: 200px;
   max-width: fit-content;
