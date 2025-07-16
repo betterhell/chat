@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 import axios from "axios";
 import AuthService from "@/services/AuthService";
 import { User } from "@/models/user.model";
-import { AuthResponse } from "@/models/response/authResponse";
+import { AuthResponseModel } from "@/models/response/authResponse.model";
 import { API_URL } from "@/config";
 import UserService from "@/services/UserService";
 import socket from "@/socket";
@@ -127,7 +127,7 @@ export const useUserStore = create<useUserStore>()(
     checkAuth: async () => {
       set({ isLoading: true });
       try {
-        const { data } = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
+        const { data } = await axios.get<AuthResponseModel>(`${API_URL}/refresh`, {
           withCredentials: true,
         });
         localStorage.setItem("token", data.accessToken);

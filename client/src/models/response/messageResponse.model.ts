@@ -1,4 +1,4 @@
-export interface MessageResponse {
+export interface MessageResponseModel {
     text: string
 }
 
