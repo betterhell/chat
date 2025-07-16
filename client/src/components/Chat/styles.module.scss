@@ -40,12 +40,96 @@
   }
 }
 
+.hamburgerWrapper {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 200;
+}
+
 @media screen and (max-width: 1110px) {
   .chat {
     grid-template-columns: 100%;
   }
 
   .chat__aside {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80vw;
+    max-width: 350px;
+    height: 100vh;
+    background: #fff;
+    z-index: 200;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s, visibility 0.2s;
+    transform: translateX(-100%);
+  }
+  
+  .chat__aside.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .hamburgerWrapper {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+  }
+
+  .closeAsideBtn {
+    display: block;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 201;
+    background: #fff;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+  }
+
+  .menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.25);
+    z-index: 199;
+    transition: opacity 0.2s;
+  }
+}
+
+@media screen and (min-width: 1110px) {
+  .hamburgerWrapper {
     display: none;
+  }
+
+  .closeAsideBtn {
+    display: none;
+  }
+
+  .chat__aside {
+    z-index: 200;
+    display: block;
+    position: static;
+    width: auto;
+    max-width: none;
+    height: auto;
+    box-shadow: none;
+    transform: none;
   }
 }

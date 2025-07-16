@@ -1,12 +1,24 @@
 import React from 'react';
 import styles from "./styles.module.scss";
 
-const Hamburger = () => {
-    return <button className={`${styles.hamburger} ${styles.hamburger__arrowturn} ${styles.isActive}`} type="button">
-            <span className={styles.hamburger_box}>
-            <span className={styles.hamburger_inner}></span>
-            </span>
+interface HamburgerProps {
+  onClick?: () => void;
+  isActive?: boolean;
+}
+
+const Hamburger: React.FC<HamburgerProps> = ({ onClick, isActive }) => {
+  return (
+    <button
+      className={styles.hamburger}
+      type="button"
+      onClick={onClick}
+      aria-label="Открыть меню"
+    >
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
     </button>
+  );
 };
 
 export default Hamburger;
